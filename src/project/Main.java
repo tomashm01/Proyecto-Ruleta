@@ -1,7 +1,5 @@
 package project;
-
 import java.util.Scanner;
-
 public class Main {
 	public static void main(String[] args) {
 		menu();
@@ -9,7 +7,7 @@ public class Main {
 
 	static void menu() {
 		Menu mainMenu = new Menu("--MAIN MENU--", "Play roulette", "Person menu");
-		mainMenu.gestionar();
+		mainMenu.manage();
 	}
 
 	static void menuChanges() {
@@ -25,7 +23,7 @@ public class Main {
 		System.out.println(ConsoleColors.RESET);
 		System.out.println(ConsoleColors.YELLOW + "5.Change Dni");
 		System.out.println(ConsoleColors.RESET);
-		System.out.println(ConsoleColors.RED + "6.Go out person change menu");
+		System.out.println(ConsoleColors.RED + "6.Go back");
 		System.out.println(ConsoleColors.RESET);
 	}
 
@@ -40,7 +38,7 @@ public class Main {
 		System.out.println(ConsoleColors.RESET);
 		System.out.println(ConsoleColors.WHITE + "4.Change options of the person");
 		System.out.println(ConsoleColors.RESET);
-		System.out.println(ConsoleColors.RED + "5.Go out person menu");
+		System.out.println(ConsoleColors.RED + "5.Go back");
 		System.out.println(ConsoleColors.RESET);
 	}
 }

@@ -1,56 +1,50 @@
 package project;
-
 import java.util.Arrays;
 import java.util.Scanner;
-
 public class Menu {
-  private String titulo = null;
-  private String[] opciones = null;
-  // Creamos un menú
-  public Menu (String titulo, String... opciones) {
-    this.titulo = titulo;
-    this.opciones = opciones;
+  private String title = null;
+  private String[] options = null;
+  // Constructor
+  public Menu (String title_, String... options_) {
+    this.title = title_;
+    this.options = options_;
   }
-  
-
-  // Métodos del menú
-  
   /**
-   * Añade opciones al menú
+   * This function add a new option
    * @param nuevaOpcion
    */
-  public void añadirOpcion(String nuevaOpcion){
-    this.opciones = Arrays.copyOf(this.opciones, this.opciones.length+1);
-    this.opciones[this.opciones.length-1] = nuevaOpcion;  
+  public void addOption(String newOption){
+    this.options = Arrays.copyOf(this.options, this.options.length+1);
+    this.options[this.options.length-1] = newOption;  
   }
   
   
   /**
-   * Muestra el menú con todas sus opciones.
+   * This function shows the menu
    */
-  private void mostrarMenu() {
-    System.out.printf("\n%40s\n\n",ConsoleColors.BLUE_BOLD + this.titulo);
-    for (int i =0 ; i < this.opciones.length ; i++) {
-      System.out.printf(ConsoleColors.GREEN + "option %d: %s\n",(i+1), this.opciones[i]);
+  private void showMenu() {
+    System.out.printf("\n%40s\n\n",ConsoleColors.BLUE_BOLD + this.title);
+    for (int i =0 ; i < this.options.length ; i++) {
+      System.out.printf(ConsoleColors.GREEN + "option %d: %s\n",(i+1), this.options[i]);
     }
-    //Como todos los menús tienen la opción de terminar la añadiré por defecto.
-    System.out.printf(ConsoleColors.RESET + ConsoleColors.RED + "option %d: Go back" + ConsoleColors.RESET,(this.opciones.length+1));
+    //As all menus have the option to finish I will add it by default.
+    System.out.printf(ConsoleColors.RESET + ConsoleColors.RED + "option %d: Go back" + ConsoleColors.RESET,(this.options.length+1));
   }
   
-  private int elegirOpcion() {
+  private int selectOption() {
    Scanner s = new Scanner(System.in);
-   int opcionElegida;
+   int chosenOption;
    do {
-     System.out.printf(ConsoleColors.RESET + ConsoleColors.BLUE_BOLD + "\n\nElige una opción(1-%d):",this.opciones.length+1);
+     System.out.printf(ConsoleColors.RESET + ConsoleColors.BLUE_BOLD + "\n\nSelect one option(1-%d):",this.options.length+1);
      System.out.print(ConsoleColors.RESET + ConsoleColors.YELLOW);
-     opcionElegida = s.nextInt();
-   }while (opcionElegida < 1 || opcionElegida > this.opciones.length+1);
-  return opcionElegida; 
+     chosenOption = s.nextInt();
+   }while (chosenOption < 1 || chosenOption > this.options.length+1);
+  return chosenOption; 
   }
   
-  public int gestionar() {
-    mostrarMenu();
-    return elegirOpcion();
+  public int manage() {
+    showMenu();
+    return selectOption();
   } 
 }
 
