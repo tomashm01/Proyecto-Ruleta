@@ -18,7 +18,8 @@ public class Main {
 	  person.manage();
 	}
 	static void changePersonMenu() {
-	  Menu change=new Menu("--CHANGE PERSON MENU--","Change dni","Change name","Change surnames","Change age","Change location")
+	  Menu change=new Menu("--CHANGE PERSON MENU--","Change dni","Change name","Change surnames","Change age","Change location");
+	  change.manage();
 	}
 	
 	
