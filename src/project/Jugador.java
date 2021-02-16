@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class Jugador extends Persona {
   private int money;
   static ArrayList <Jugador> players=new ArrayList<Jugador>();
+  //Constructor
   Jugador(String dni_,int money_){
     super(dni_);
     if(money_<=0) {
