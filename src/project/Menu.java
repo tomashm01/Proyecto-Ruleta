@@ -35,9 +35,16 @@ public class Menu {
    Scanner s = new Scanner(System.in);
    int chosenOption;
    do {
+	   
      System.out.printf(ConsoleColors.RESET + ConsoleColors.BLUE_BOLD + "\n\nSelect one option(1-%d):",this.options.length+1);
      System.out.print(ConsoleColors.RESET + ConsoleColors.YELLOW);
      chosenOption = s.nextInt();
+     s.nextLine();
+     if (chosenOption < 1 || chosenOption > this.options.length+1) {
+    	 System.out.println(ConsoleColors.RED + "Error en la entrada" + ConsoleColors.RESET);
+    	 showMenu();
+     }
+     
    }while (chosenOption < 1 || chosenOption > this.options.length+1);
   return chosenOption; 
   }

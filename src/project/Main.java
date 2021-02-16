@@ -15,9 +15,6 @@ public class Main {
 	      case 3:
 	        System.out.println("Adios");
 	        break;
-	      default:
-	        System.out.println("Error en la entrada");
-	        break;
 	    }
 	  }while(n!=3);
 	}
