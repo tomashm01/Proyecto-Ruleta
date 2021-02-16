@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class Main{
   public static void main(String[] args) {
     menu();
+    System.out.println("Hola");
   }
   static void menu() {
     System.out.println(ConsoleColors.BLUE_BOLD+"                --PRINCIPAL MENU-- ");
