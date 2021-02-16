@@ -3,7 +3,7 @@ package project;
 import java.util.Scanner;
 public class Main{
   public static void main(String[] args) {
-    System.out.println("Hey");
+    
   }
   static void menu() {
     System.out.println(ConsoleColors.BLUE_BOLD+"                --PRINCIPAL MENU-- ");
