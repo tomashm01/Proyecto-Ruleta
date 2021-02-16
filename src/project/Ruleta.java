@@ -108,11 +108,11 @@ public class Ruleta {
       return val;
     }
     else if(n<19) {
-      val="HIGHER";
+      val="LOWER";
       return val;
     }
     else if(n>18) {
-      val="LOWER";
+      val="HIGHER";
       return val;
     }
     return val;

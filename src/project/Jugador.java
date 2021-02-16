@@ -24,10 +24,10 @@ public class Jugador extends Persona {
   }
   
   //Getters
-  public int getDinero() {return money;}
+  public int getMoney() {return money;}
   
   //Setters
-  public boolean setDinero(int money_) {
+  public boolean setMoney(int money_) {
     if(money_<=0) {
       return false;
     }
