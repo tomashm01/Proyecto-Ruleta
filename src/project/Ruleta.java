@@ -6,11 +6,8 @@ import java.util.List;
 public class Ruleta {
   private int number;
   //Arraylist 
-  List <Integer> moneyBets= new ArrayList <Integer>();
-  List <Boolean> optionBets= new ArrayList <Boolean>();
-
-  
- 
+  static List <Integer> moneyBets= new ArrayList <Integer>();
+  static List <Boolean> optionBets= new ArrayList <Boolean>();
 
 public void Ruleta() {
 	  boolean rojo = false;
@@ -22,7 +19,11 @@ public void Ruleta() {
 	  boolean higher = false;
 	  boolean lower = false;
 	  
+	  int color=0;
+	  int evenOdd=0;
+	  int highLow=0;
 	  optionBets.addAll(List.of(rojo, negro, par, impar, higher, lower));
+	  moneyBets.addAll(List.of(color,evenOdd,highLow));
   }
   
   /**

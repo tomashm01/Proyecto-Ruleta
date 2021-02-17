@@ -44,9 +44,9 @@ public class Main {
     int count=0;
     Scanner s=new Scanner(System.in);
     String dni;
-    int money=500;
+    int money=500,option;
     int cant1,cant2,cant3;
-    String red,black,even,odd,high,low;
+    String type1,type2,type3;
     //Warning message to the player
     System.out.println(ConsoleColors.CYAN+"YOU HAVE 3 ATTEMPS TO INPUT YOUR DNI"+ConsoleColors.RESET);
     do {//User have got 3 attemps to introduce a valid dni
@@ -60,24 +60,82 @@ public class Main {
       dni=Jugador.randomDni();
     }
     do {
-      int option=rouletteMenu();
+      option=rouletteMenu();
       switch(option) {
         case 1:
           System.out.println("Please insert the amount to bet: ");
-          
+          cant1=s.nextInt();
+          if((money-cant1)<0) {
+            System.out.println("You have not got this money");
+            continue;
+          }
+          money-=cant1;
+          Ruleta.moneyBets.add(0,cant1);
+          s.nextLine();
+          do {
+            System.out.println("Input the type: RED | BLACK");
+            type1=s.nextLine();
+            type1.toUpperCase();
+          }while(!type1.equals("RED") || !type1.equals("BLACK"));
+          if(type1=="RED") {
+            Ruleta.optionBets.add(0,true);
+          }
+          else {
+            Ruleta.optionBets.add(1,true);
+          }
           break;
         case 2:
-          
+          System.out.println("Please insert the amount to bet: ");
+          cant2=s.nextInt();
+          if((money-cant2)<0) {
+            System.out.println("You have not got this money");
+            continue;
+          }
+          money-=cant2;
+          Ruleta.moneyBets.add(1,cant2);
+          s.nextLine();
+          do {
+            System.out.println("Input the type: EVEN | ODD");
+            type2=s.nextLine();
+            type2.toUpperCase();
+          }while(!type2.equals("EVEN") || !type2.equals("ODD"));
+          if(type2=="EVEN") {
+            Ruleta.optionBets.add(2,true);
+          }
+          else {
+            Ruleta.optionBets.add(3,true);
+          }
           break;
         case 3:
-          
+          System.out.println("Please insert the amount to bet: ");
+          cant3=s.nextInt();
+          if((money-cant3)<0) {
+            System.out.println("You have not got this money");
+            continue;
+          }
+          money-=cant3;
+          Ruleta.moneyBets.add(2,cant3);
+          s.nextLine();
+          do {
+            System.out.println("Input the type: HIGH(19-36) | LOW(1-19)");
+            type3=s.nextLine();
+            type3.toUpperCase();
+          }while(!type3.equals("HIGH") || !type3.equals("LOW"));
+          if(type3=="HIGH") {
+            Ruleta.optionBets.add(4,true);
+          }
+          else {
+            Ruleta.optionBets.add(5,true);
+          }
           break;
         case 4:
           
           break;
         case 5:
-          System.out.println(ConsoleColors.PURPLE_BOLD+"Goodbye");
+          System.out.println(ConsoleColors.CYAN+"Goodbye");
           break;
+        default:
+          System.out.println(ConsoleColors.RED+"Error in the input option"+ConsoleColors.RESET);
       }
     }while(option!=5);
   }
