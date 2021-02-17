@@ -44,6 +44,9 @@ public class Main {
     int count=0;
     Scanner s=new Scanner(System.in);
     String dni;
+    int money=500;
+    int cant1,cant2,cant3;
+    String red,black,even,odd,high,low;
     //Warning message to the player
     System.out.println(ConsoleColors.CYAN+"YOU HAVE 3 ATTEMPS TO INPUT YOUR DNI"+ConsoleColors.RESET);
     do {//User have got 3 attemps to introduce a valid dni
@@ -60,6 +63,7 @@ public class Main {
       int option=rouletteMenu();
       switch(option) {
         case 1:
+          System.out.println("Please insert the amount to bet: ");
           
           break;
         case 2:
