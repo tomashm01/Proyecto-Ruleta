@@ -44,7 +44,7 @@ public class Main {
     int count=0;
     Scanner s=new Scanner(System.in);
     String dni;
-    int money=500,option,number;
+    int money=500,option;
     int cant1=0,cant2=0,cant3=0;
     String type1="",type2="",type3="";
     //Warning message to the player
@@ -63,31 +63,38 @@ public class Main {
     }
     
     do {
+      System.out.println();
+      System.out.println("MONEY: "+money);
+      System.out.println("DNI: "+dni);
       option=rouletteMenu();
       switch(option) {
         case 1:
           System.out.println("Please insert the amount to bet: ");
           cant1=s.nextInt();
+          s.nextLine();
           if((money-cant1)<0) {
             System.out.println("You have not got this money");
             continue;
           }
           money-=cant1;
           Ruleta.moneyBets.add(0,cant1);
-          s.nextLine();
           do {
             System.out.println("Input the type: RED | BLACK");
-            type1=s.nextLine();
-            type1.toUpperCase();
-            if(!type1.equals("HIGH") || !type1.equals("LOW")) {
+            type1=s.nextLine();     
+            type1=type1.toUpperCase();
+            System.out.println(type1);
+            if(!type1.equals("RED") && !type1.equals("BLACK")) {
               System.out.println(ConsoleColors.RED+"Please insert a RED OR BLACK"+ConsoleColors.RESET);
+              continue;
             }
-          }while(!type1.equals("RED") || !type1.equals("BLACK"));
-          if(type1=="RED") {
+          }while(!type1.equals("RED") && !type1.equals("BLACK"));
+          if(type1.equals("RED")) {
             Ruleta.optionBets.add(0,true);
+            Ruleta.moneyBets.add(0,money);
           }
           else {
             Ruleta.optionBets.add(1,true);
+            Ruleta.moneyBets.add(0,money);
           }
           break;
         case 2:
@@ -104,15 +111,17 @@ public class Main {
             System.out.println("Input the type: EVEN | ODD");
             type2=s.nextLine();
             type2.toUpperCase();
-            if(!type2.equals("HIGH") || !type2.equals("LOW")) {
+            if(!type2.equals("EVEN") && !type2.equals("ODD")) {
               System.out.println(ConsoleColors.RED+"Please insert a EVEN OR ODD"+ConsoleColors.RESET);
             }
-          }while(!type2.equals("EVEN") || !type2.equals("ODD"));
-          if(type2=="EVEN") {
+          }while(!type2.equals("EVEN") && !type2.equals("ODD"));
+          if(type2.equals("EVEN")) {
             Ruleta.optionBets.add(2,true);
+            Ruleta.moneyBets.add(1,money);
           }
           else {
             Ruleta.optionBets.add(3,true);
+            Ruleta.moneyBets.add(1,money);
           }
           break;
         case 3:
@@ -129,20 +138,23 @@ public class Main {
             System.out.println("Input the type: HIGH(19-36) | LOW(1-19)");
             type3=s.nextLine();
             type3.toUpperCase();
-            if(!type3.equals("HIGH") || !type3.equals("LOW")) {
+            if(!type3.equals("HIGH") && !type3.equals("LOW")) {
               System.out.println(ConsoleColors.RED+"Please insert a HIGH OR LOW"+ConsoleColors.RESET);
             }
-          }while(!type3.equals("HIGH") || !type3.equals("LOW"));
-          if(type3=="HIGH") {
+          }while(!type3.equals("HIGH") && !type3.equals("LOW"));
+          if(type3.equals("HIGH")) {
             Ruleta.optionBets.add(4,true);
+            Ruleta.moneyBets.add(2,money);
           }
           else {
             Ruleta.optionBets.add(5,true);
+            Ruleta.moneyBets.add(2,money);
           }
           break;
         case 4:
           String val;
-          number=Ruleta.randomBall();
+          int number=Ruleta.randomBall();
+          System.out.println("NUMBER ->"+number);
           for(int i=0;i<Ruleta.optionBets.size();i++) {
             if(Ruleta.optionBets.get(i).equals(true)) {
               if(i<=1) {//If the user do a color bet

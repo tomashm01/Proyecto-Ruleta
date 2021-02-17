@@ -31,8 +31,8 @@ public class Ruleta {
    * @return int
    */
   static int randomBall() {
-    int n = (int) Math.random() % 37;
-    return n;
+    return ((int) Math.random()%37);
+    
   }
 
   /**
