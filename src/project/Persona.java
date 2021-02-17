@@ -187,10 +187,4 @@ public class Persona {
     dni = numDni + letterDni;
     return dni;
   }
-
-  @Override
-  public String toString() {
-    return ("Mi nombre es " + this.getName() + " " + this.getSurnames() + ", mi edad es "
-        + this.getAge() + " con dni " + this.getDni() + " y vivo en " + this.getLocation() + "\n");
-  }
 }

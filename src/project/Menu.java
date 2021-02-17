@@ -3,7 +3,7 @@ package project;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu{
   private String title = null;
   private String[] options = null;
 
@@ -36,8 +36,14 @@ public class Menu {
     System.out.printf(
         ConsoleColors.RESET + ConsoleColors.RED + "option %d: Go back" + ConsoleColors.RESET,
         (this.options.length + 1));
+    if(Jugador.getMoney()<=0) {
+      addOption("Reset game");
+    }
   }
-
+  /**
+   * This function returns a chosen option
+   * @return int
+   */
   private int selectOption() {
     Scanner s = new Scanner(System.in);
     int chosenOption;
@@ -57,7 +63,10 @@ public class Menu {
     } while (chosenOption < 1 || chosenOption > this.options.length + 1);
     return chosenOption;
   }
-
+  /**
+   * This function print the menu and returns the select chosen option
+   * @return int
+   */
   public int manage() {
     showMenu();
     return selectOption();

@@ -1,53 +1,12 @@
 package project;
 
-/*
- * Name: Ruleta.java
- * 
- * Author: Tomás Hidalgo Martín
- * 
- * Description: Class Ruleta, this class have got a bank(the money os the roulette) and a number(the
- * random number generate).
- * 
- * Version:1.0
- * 
- */
+import java.util.ArrayList;
+
 public class Ruleta {
-  private int bank, number;
-
-  // Constructor
-  Ruleta(int bank_) {
-    if (bank_ <= 1000000) {
-      bank_ = 1000000;
-    }
-    bank = bank_;
-    number = -1;
-  }
-
-  // Getters
-  public int getBanca() {
-    return bank;
-  }
-
-  public int getNum() {
-    return number;
-  }
-
-  // Setters
-  public boolean setBanca(int bank_) {
-    if (bank_ < 0) {
-      return false;
-    }
-    bank = bank_;
-    return true;
-  }
-
-  public boolean setNum(int n) {
-    if (n < 0 || n > 36) {
-      return false;
-    }
-    number = n;
-    return true;
-  }
+  private int number;
+  //Arraylist 
+  ArrayList <Integer> moneyBets= new ArrayList <Integer>();
+  ArrayList <Boolean> optionBets= new ArrayList <Boolean>();
 
   /**
    * This function generate a random value for the ball between 0-36
