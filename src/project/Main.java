@@ -154,6 +154,9 @@ public class Main {
           break;
         case 4:
           String val;
+          System.out.println();
+          System.out.println();
+          System.out.println();
           int number=Ruleta.randomBall();
           System.out.println("NUMBER ->"+number);
           for(int i=0;i<Ruleta.optionBets.size();i++) {
