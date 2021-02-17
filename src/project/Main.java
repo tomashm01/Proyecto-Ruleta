@@ -54,11 +54,14 @@ public class Main {
       dni=s.nextLine();
       if(!Jugador.validateDni(dni)){
         count++;
+      }else {
+    	  break;
       }
     }while(count!=3);
     if(count==3) {//Random DNI
       dni=Jugador.randomDni();
     }
+    
     do {
       option=rouletteMenu();
       switch(option) {
