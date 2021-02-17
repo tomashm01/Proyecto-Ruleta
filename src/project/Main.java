@@ -41,7 +41,41 @@ import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) {
-    
+    int count=0;
+    Scanner s=new Scanner(System.in);
+    String dni;
+    //Warning message to the player
+    System.out.println(ConsoleColors.CYAN+"YOU HAVE 3 ATTEMPS TO INPUT YOUR DNI"+ConsoleColors.RESET);
+    do {//User have got 3 attemps to introduce a valid dni
+      System.out.println(ConsoleColors.CYAN+"Please input your dni: "+ConsoleColors.RESET);
+      dni=s.nextLine();
+      if(!Jugador.validateDni(dni)){
+        count++;
+      }
+    }while(count!=3);
+    if(count==3) {//Random DNI
+      dni=Jugador.randomDni();
+    }
+    do {
+      int option=rouletteMenu();
+      switch(option) {
+        case 1:
+          
+          break;
+        case 2:
+          
+          break;
+        case 3:
+          
+          break;
+        case 4:
+          
+          break;
+        case 5:
+          System.out.println(ConsoleColors.PURPLE_BOLD+"Goodbye");
+          break;
+      }
+    }while(option!=5);
   }
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
