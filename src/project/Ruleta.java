@@ -21,8 +21,17 @@ public class Ruleta {
 	  int color=0;
 	  int evenOdd=0;
 	  int highLow=0;
-	  optionBets.addAll(List.of(rojo, negro, par, impar, higher, lower));
-	  moneyBets.addAll(List.of(color,evenOdd,highLow));
+	  
+	  optionBets.add(rojo);
+	  optionBets.add(negro);
+	  optionBets.add(par);
+	  optionBets.add(impar);
+	  optionBets.add(higher);
+	  optionBets.add(lower);
+	  
+	  moneyBets.add(color);
+	  moneyBets.add(evenOdd);
+	  moneyBets.add(highLow);
   }
   
   /**

@@ -48,6 +48,7 @@ public class Main {
     int cant1=0,cant2=0,cant3=0;
     String type1="",type2="",type3="";
     //Warning message to the player
+    Ruleta.Ruleta();
     System.out.println(ConsoleColors.CYAN+"YOU HAVE 3 ATTEMPS TO INPUT YOUR DNI"+ConsoleColors.RESET);
     do {//User have got 3 attemps to introduce a valid dni
       System.out.println(ConsoleColors.CYAN+"Please input your dni: "+ConsoleColors.RESET);
@@ -61,7 +62,7 @@ public class Main {
     if(count==3) {//Random DNI
       dni=Jugador.randomDni();
     }
-    
+    System.out.println(Ruleta.optionBets.size());
     do {
       System.out.println();
       System.out.println("MONEY: "+money);
