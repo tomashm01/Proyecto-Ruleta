@@ -44,9 +44,9 @@ public class Main {
     int count=0;
     Scanner s=new Scanner(System.in);
     String dni;
-    int money=500,option;
-    int cant1,cant2,cant3;
-    String type1,type2,type3;
+    int money=500,option,number;
+    int cant1=0,cant2=0,cant3=0;
+    String type1="",type2="",type3="";
     //Warning message to the player
     System.out.println(ConsoleColors.CYAN+"YOU HAVE 3 ATTEMPS TO INPUT YOUR DNI"+ConsoleColors.RESET);
     do {//User have got 3 attemps to introduce a valid dni
@@ -76,6 +76,9 @@ public class Main {
             System.out.println("Input the type: RED | BLACK");
             type1=s.nextLine();
             type1.toUpperCase();
+            if(!type1.equals("HIGH") || !type1.equals("LOW")) {
+              System.out.println(ConsoleColors.RED+"Please insert a RED OR BLACK"+ConsoleColors.RESET);
+            }
           }while(!type1.equals("RED") || !type1.equals("BLACK"));
           if(type1=="RED") {
             Ruleta.optionBets.add(0,true);
@@ -98,6 +101,9 @@ public class Main {
             System.out.println("Input the type: EVEN | ODD");
             type2=s.nextLine();
             type2.toUpperCase();
+            if(!type2.equals("HIGH") || !type2.equals("LOW")) {
+              System.out.println(ConsoleColors.RED+"Please insert a EVEN OR ODD"+ConsoleColors.RESET);
+            }
           }while(!type2.equals("EVEN") || !type2.equals("ODD"));
           if(type2=="EVEN") {
             Ruleta.optionBets.add(2,true);
@@ -120,6 +126,9 @@ public class Main {
             System.out.println("Input the type: HIGH(19-36) | LOW(1-19)");
             type3=s.nextLine();
             type3.toUpperCase();
+            if(!type3.equals("HIGH") || !type3.equals("LOW")) {
+              System.out.println(ConsoleColors.RED+"Please insert a HIGH OR LOW"+ConsoleColors.RESET);
+            }
           }while(!type3.equals("HIGH") || !type3.equals("LOW"));
           if(type3=="HIGH") {
             Ruleta.optionBets.add(4,true);
@@ -129,7 +138,31 @@ public class Main {
           }
           break;
         case 4:
-          
+          String val;
+          number=Ruleta.randomBall();
+          for(int i=0;i<Ruleta.optionBets.size();i++) {
+            if(Ruleta.optionBets.get(i).equals(true)) {
+              if(i<=1) {//If the user do a color bet
+                val=Ruleta.colorBall(number);
+                if(type1.equals(val)) {
+                  money=money+(cant1*2);
+                }
+              }
+              else if(i>=2 && i<=3) {//If the user do a even or odd bet
+                val=Ruleta.EvenOddBall(number);
+                if(type2.equals(val)) {
+                  money=money+(cant2*2);
+                }
+              }
+              else {//If the user do a high or low bet
+                val=Ruleta.HigherLowerThan(number);
+                if(type3.equals(val)) {
+                  money=money+(cant3*2);
+                }
+              }
+            }
+          }
+          Ruleta.Ruleta(); //Reinicialize the roulette
           break;
         case 5:
           System.out.println(ConsoleColors.CYAN+"Goodbye");

@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ruleta {
-  private int number;
   //Arraylist 
   static List <Integer> moneyBets= new ArrayList <Integer>();
   static List <Boolean> optionBets= new ArrayList <Boolean>();
 
-public void Ruleta() {
+  public static void Ruleta() {
 	  boolean rojo = false;
 	  boolean negro = false;
 	  
