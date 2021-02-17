@@ -40,8 +40,8 @@ public class Ruleta {
    * @return int
    */
   static int randomBall() {
-    return ((int) Math.random()%37);
-    
+    int aleatorio = (int) (0 + Math.random() * (36 - 0) + 1);
+    return aleatorio;
   }
 
   /**

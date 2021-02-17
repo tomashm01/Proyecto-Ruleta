@@ -62,7 +62,6 @@ public class Main {
     if(count==3) {//Random DNI
       dni=Jugador.randomDni();
     }
-    System.out.println(Ruleta.optionBets.size());
     do {
       System.out.println();
       System.out.println("MONEY: "+money);
