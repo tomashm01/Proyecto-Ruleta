@@ -1,13 +1,30 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Ruleta {
   private int number;
   //Arraylist 
-  ArrayList <Integer> moneyBets= new ArrayList <Integer>();
-  ArrayList <Boolean> optionBets= new ArrayList <Boolean>();
+  List <Integer> moneyBets= new ArrayList <Integer>();
+  List <Boolean> optionBets= new ArrayList <Boolean>();
 
+  
+ 
+
+public void Ruleta() {
+	  boolean rojo = false;
+	  boolean negro = false;
+	  
+	  boolean par = false;
+	  boolean impar = false;
+	  
+	  boolean higher = false;
+	  boolean lower = false;
+	  
+	  optionBets.addAll(List.of(rojo, negro, par, impar, higher, lower));
+  }
+  
   /**
    * This function generate a random value for the ball between 0-36
    * 
