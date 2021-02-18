@@ -1,30 +1,84 @@
 package project;
-/*
 
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+
+/*
+ * 
  * Name: Ruleta.java
+ * 
  * 
  * Author: Tomás Hidalgo Martín
  * 
- * Description: Class Jugador, this class generate a player object. 
+ * Description: Class Jugador, this class generate a player object.
  * 
  * Version:1.0
  * 
  */
-import java.util.ArrayList;
-import java.util.Scanner;
-public class Jugador{
-  private static int money;
+
+
+public class Jugador {
+
+  private static List<String> opcionesElegidas = new ArrayList<>();
+  private static List<Integer> opcionesPagadas = new ArrayList<>();
+
+  private static int money = 500;
+  private static String dni = "";
+
   static final double MAX = 99999999;
-  private String dni;
-  //Constructor
-  Jugador(String dni_){
-    if(!validateDni(dni_)) {
-      dni_=randomDni();
-    }
-    dni=dni_;
-    money=500;
+
+  public static String getDni() {
+    return dni;
   }
-  public static int getMoney() {return money;}
+
+  public static int getMoney() {
+    return money;
+  }
+
+  public static String getChoice(int index) {
+    return opcionesElegidas.get(index);
+  }
+
+  public static int getOpcionesPagadas(int index) {
+    return opcionesPagadas.get(index);
+  }
+
+
+  public static List<String> getOpcionesElegidas() {
+    return opcionesElegidas;
+  }
+
+  public static void addChoice(String choice) {
+    choice = choice.toUpperCase();
+    opcionesElegidas.add(choice);
+  }
+
+  public static void setDni(String dni) {
+    Jugador.dni = dni;
+  }
+
+  public static void betMoney(int bettedMoney) throws NoMoneyException{
+
+    if (money - bettedMoney < 0) {
+      throw new NoMoneyException("You have not enough money to bet for this.");
+    }
+    opcionesPagadas.add(bettedMoney);
+
+    money -= bettedMoney;
+
+  }
+
+  public static void restartRound() {
+    Jugador.opcionesElegidas = new ArrayList<>();
+    Jugador.opcionesPagadas = new ArrayList<>();
+  }
+
+  public static void setFinalMoney() {
+    int finalMoney = Ruleta.calculateFinalMoney();
+    Jugador.money += finalMoney;
+  }
+
   /**
    * Function that validate if the dni which is passed by parameter is correct or incorrect
    * 
@@ -67,6 +121,7 @@ public class Jugador{
     // DNI CORRECT
     return true;
   }
+
   /**
    * This function generate a random Dni
    * 
@@ -86,4 +141,6 @@ public class Jugador{
     dni = numDni + letterDni;
     return dni;
   }
+
+
 }

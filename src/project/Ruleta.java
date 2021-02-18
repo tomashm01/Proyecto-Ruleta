@@ -1,39 +1,19 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Ruleta {
-  //Arraylist 
-  static List <Integer> moneyBets= new ArrayList <Integer>();
-  static List <Boolean> optionBets= new ArrayList <Boolean>();
 
-  public static void Ruleta() {
-	  boolean rojo = false;
-	  boolean negro = false;
-	  
-	  boolean par = false;
-	  boolean impar = false;
-	  
-	  boolean higher = false;
-	  boolean lower = false;
-	  
-	  int color=0;
-	  int evenOdd=0;
-	  int highLow=0;
-	  
-	  optionBets.add(rojo);
-	  optionBets.add(negro);
-	  optionBets.add(par);
-	  optionBets.add(impar);
-	  optionBets.add(higher);
-	  optionBets.add(lower);
-	  
-	  moneyBets.add(color);
-	  moneyBets.add(evenOdd);
-	  moneyBets.add(highLow);
-  }
-  
+  // Conjuntos
+  // Set<String> conjuntoResultado = new HashSet<>(opcionesElegidas);
+
+  // conjuntoResultado.retainAll(conjunto1)
+
+  static Set<String> opcionesResultantes = new HashSet<>();
+
   /**
    * This function generate a random value for the ball between 0-36
    * 
@@ -111,4 +91,45 @@ public class Ruleta {
     }
     return val;
   }
+
+  static void pushRoulette() {
+    int ballNumber = Ruleta.randomBall();
+    System.out.println("NUMBER ->" + ballNumber);
+
+    opcionesResultantes.addAll(List.of(Ruleta.colorBall(ballNumber), Ruleta.EvenOddBall(ballNumber),
+        Ruleta.HigherLowerThan(ballNumber)));
+
+    Jugador.setFinalMoney();
+
+    restartRoulette();
+  }
+
+
+
+  static int calculateFinalMoney() {
+    Set<String> interSeccionDeOpciones = new HashSet<>(opcionesResultantes);
+    interSeccionDeOpciones.retainAll(Jugador.getOpcionesElegidas());
+
+    int finalMoney = 0;
+
+    for (String opcionesAcertada : interSeccionDeOpciones) {
+      for (int i = 0; i < Jugador.getOpcionesElegidas().size(); i++) {
+        if (Jugador.getChoice(i).equals(opcionesAcertada)) {
+          finalMoney = Jugador.getOpcionesPagadas(i) * 2;
+        }
+      }
+    }
+
+    return finalMoney;
+
+  }
+
+  private static void restartRoulette() {
+    opcionesResultantes = new HashSet<>();
+    Jugador.restartRound();
+  }
+
+
 }
+
+

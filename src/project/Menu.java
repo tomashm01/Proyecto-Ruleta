@@ -53,8 +53,7 @@ public class Menu{
           ConsoleColors.RESET + ConsoleColors.BLUE_BOLD + "\n\nSelect one option(1-%d):",
           this.options.length + 1);
       System.out.print(ConsoleColors.RESET + ConsoleColors.YELLOW);
-      chosenOption = s.nextInt();
-      s.nextLine();
+      chosenOption = Main.validateNumber();
       if (chosenOption < 1 || chosenOption > this.options.length + 1) {
         System.out.println(ConsoleColors.RED + "Error en la entrada" + ConsoleColors.RESET);
         showMenu();

@@ -1,198 +1,195 @@
 package project;
 
 /**
- * Primero se va a mostrar el credito arriba a la derecha (0 Créditos) El menú será: Valor
- * predeterminado: 500 creditos
+ * Version Actual: 6 Clases Main.java: Mostramos un menú funcional con el que interactúa el usuario
+ * Sus opciones son: 1ºApostar al color 2ºApostar a par o impar (Lo mismo pero diciendo si es par o
+ * impar y multiplica por 2 igual) 3ºSi el numero está entre 1 y 18 o 19 al 36 4º Girar la ruleta
  * 
- * v1.0: (El dineroInvertido es individual en cada opcion -> lista de dinero) (Habrá otra lista con
- * las distintas opciones -> [i] [i+1] -> lista de booleanos) Ruleta 500 Creditos --- 1ºApostar al
- * color listaDinero[0] = dinero; listaBoleanos[0-1] = true; -> el otro false
+ * Jugador.java: Es necesario añadir un DNI para identificar que el jugador es apto para jugar en
+ * nuestro juego. Sus créditos iniciales serán 500 por defecto. El jugador elegirá la opción que
+ * quiera en cada tirada. Puede pasar de ronda sin apostar nada. El jugador podrá apostar X dinero a
+ * un color. Si acierta recibe el doble de esa cantidad. También podrá apostar X dinero si el número
+ * es par / impar o si es mayor o menor que 36. Las apuestas a cada opción son independientes.
  * 
- * 2ºApostar a par o impar (Lo mismo pero diciendo si es par o impar y multiplica por 2 igual)
- * listaDinero[1] = dinero; listaBoleanos[2-3] = true; -> el otro false
- * 
- * 3ºSi el numero está entre 1 y 18 o 19 al 36 listaDinero[2] = dinero; listaBoleanos[4-5] = true;
- * -> el otro false
- * 
- * 4º Girar la ruleta ---- Genera un número: | 5 | ----- Actualizar el crédito de arriba a la
- * derecha.
- * 
- * Cuando no tienes creditos: Añade una opcion: Reiniciar juego
- * 
- * v2.0: Añadir metodo de pago cuando no tienes creditos v2.1: Añadir ultimos numeros v2.2: Añadir
- * Contador limitado v2.3: Añadir borrar todas las apuestas v2.4: Añadir numero animado
- * 
- * v3.0: Añadir segundo juego
+ * La opción elegida en cada tirada se guardará en un arrayList (RED/BLACK,EVEN/ODD,HIGHER/LOWER) El
+ * dinero apostado en esa tirada se guardará en otro arrayList (20,100,0) (Ha apostado 20 al
+ * rojo/negro, 100 a que sale par/impar y no ha apostado a higher/lower
  * 
  * 
- * Next update: Añadir ultimas 10-15 tiradas -> numero y color
+ * Ruleta.java: En la ruleta saldrá un número aleatorio entre 0 y 36 Dependiendo del número podremos
+ * definir si es Rojo/Negro, Par o impar o si es mayor o menor que 19 Por tanto en la ruleta
+ * tendremos un conjunto de opciones resultantes para esta tirada: Set [ROJO/NEGRO, PAR/IMPAR,
+ * MAYOR/MENOR]
  * 
- * Next update: Contador limitado (45 segundos)
+ * Finalmente cuando realicemos la tirada de la ruleta haremos la intersección entre las opciones
+ * elegidas por el usuario y las opciones resultantes de la tirada. Con esta intersección sabremos
+ * qué ha acertado el usuario.
  * 
- * Next update: borrar todas las apuestas -> todo a 0 y false (lista de jugar ruleta)
+ * Para realizar el cálculo del dinero hemos considerado que: Al apostar se le resta el dinero al
+ * usuario hasta que se active la ruleta. Cuando se activa la ruleta se calculan los aciertos que ha
+ * tenido el usuario y se duplica por el valor apostado en cada caso (Si ha apostado 20 al rojo y no
+ * acierta perderá su dinero. Sin embargo, si ha apostado 100 a par y acierta, se le sumará 200 a su
+ * dinero)
  * 
- * Next update: Número moviendose con diferentes colores Si sale el 0 pierdes todo array de colores
- * con numeros -> a mano tristemente
+ * Bugs: colorChoice = Jugador.getChoice(0); evenOddChoice = Jugador.getChoice(1); highLowChoice =
+ * Jugador.getChoice(2);
  * 
- * Proximo juego: 3 columnas, le das al boton -> si las 3 filas son iguales ganas tragaperras 3
- * listas cada lista 5 elementos diferentes si los 3 elementos coinciden ganas y si no pierdes
+ * Si no hemos añadido color y añadimos evenOdd directamente el programa lanza una excepción pues
+ * solo se ha rellenado la primera opción (solo está rellena la primera posición)
+ * 
+ * Qué pasaría si seleccionamos primero high, despues color y después even? Funcionará
+ * correctamente? Debemos hacer que eso funcione.
  */
 import java.util.Scanner;
 
 public class Main {
+
   public static void main(String[] args) {
-    int count=0;
-    Scanner s=new Scanner(System.in);
-    String dni;
-    int money=500,option;
-    int cant1=0,cant2=0,cant3=0;
-    String type1="",type2="",type3="";
-    //Warning message to the player
-    Ruleta.Ruleta();
-    System.out.println(ConsoleColors.CYAN+"YOU HAVE 3 ATTEMPS TO INPUT YOUR DNI"+ConsoleColors.RESET);
-    do {//User have got 3 attemps to introduce a valid dni
-      System.out.println(ConsoleColors.CYAN+"Please input your dni: "+ConsoleColors.RESET);
-      dni=s.nextLine();
-      if(!Jugador.validateDni(dni)){
-        count++;
-      }else {
-    	  break;
+    int count = 3;
+    Scanner s = new Scanner(System.in);
+
+    int option;
+
+    String colorChoice = "";
+    String evenOddChoice = "";
+    String highLowChoice = "";
+
+    do {// User have 3 attemps to introduce a valid DNI
+
+      System.out.printf(ConsoleColors.CYAN + "Please enter your DNI. (You have %d attempts):",
+          count);
+      String dni = s.nextLine();
+      if (!Jugador.validateDni(dni)) {
+        count--;
+      } else {
+        Jugador.setDni(dni);
+        break;
       }
-    }while(count!=3);
-    if(count==3) {//Random DNI
-      dni=Jugador.randomDni();
+    } while (count != 0);
+
+    if (count == 0) {// Random DNI
+      System.out.printf(ConsoleColors.RED + "%100s", "We have created a DNI for you.");
+      Jugador.setDni(Jugador.randomDni());
     }
+
     do {
-      System.out.println();
-      System.out.println("MONEY: "+money);
-      System.out.println("DNI: "+dni);
-      option=rouletteMenu();
-      switch(option) {
+
+      System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());
+      System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
+
+      option = rouletteMenu();
+
+      switch (option) {
+
         case 1:
-          System.out.println("Please insert the amount to bet: ");
-          cant1=s.nextInt();
-          s.nextLine();
-          if((money-cant1)<0) {
-            System.out.println("You have not got this money");
-            continue;
-          }
-          money-=cant1;
-          Ruleta.moneyBets.add(0,cant1);
+
+          insertAmount();
+
           do {
-            System.out.println("Input the type: RED | BLACK");
-            type1=s.nextLine();     
-            type1=type1.toUpperCase();
-            System.out.println(type1);
-            if(!type1.equals("RED") && !type1.equals("BLACK")) {
-              System.out.println(ConsoleColors.RED+"Please insert a RED OR BLACK"+ConsoleColors.RESET);
-              continue;
+
+            System.out.printf("%s", ConsoleColors.PURPLE + "Input the type\n");// Add -1 if you want
+                                                                               // to leave
+            System.out.printf(ConsoleColors.RED + "%4s", "RED " + ConsoleColors.RESET);
+            System.out.printf("|" + ConsoleColors.BLACK_BOLD + "%s",
+                " BLACK: " + ConsoleColors.RESET);
+
+            Jugador.addChoice(s.nextLine()); // Aquí el jugador va a elegir una opción que podrá ser
+            // RED / BLACK
+            colorChoice = Jugador.getChoice(0);
+
+            if (!colorChoice.equals("RED") || !colorChoice.equals("BLACK")) {
+              System.err.println(showAsError("\nPlease insert a RED OR BLACK\n"));
             }
-          }while(!type1.equals("RED") && !type1.equals("BLACK"));
-          if(type1.equals("RED")) {
-            Ruleta.optionBets.add(0,true);
-            Ruleta.moneyBets.add(0,money);
-          }
-          else {
-            Ruleta.optionBets.add(1,true);
-            Ruleta.moneyBets.add(0,money);
-          }
+
+          } while (!colorChoice.equals("RED") && !colorChoice.equals("BLACK"));
+
           break;
         case 2:
-          System.out.println("Please insert the amount to bet: ");
-          cant2=s.nextInt();
-          if((money-cant2)<0) {
-            System.out.println("You have not got this money");
-            continue;
-          }
-          money-=cant2;
-          Ruleta.moneyBets.add(1,cant2);
-          s.nextLine();
+          insertAmount();
+
           do {
-            System.out.println("Input the type: EVEN | ODD");
-            type2=s.nextLine();
-            type2.toUpperCase();
-            if(!type2.equals("EVEN") && !type2.equals("ODD")) {
-              System.out.println(ConsoleColors.RED+"Please insert a EVEN OR ODD"+ConsoleColors.RESET);
+            System.out.print("Input the type: EVEN | ODD:");
+            Jugador.addChoice(s.nextLine()); // Aquí el jugador va a elegir una opción que podrá ser
+            // EVEN/ODD
+            evenOddChoice = Jugador.getChoice(1);
+
+            if (!evenOddChoice.equals("EVEN") && !evenOddChoice.equals("ODD")) {
+              System.err.print(showAsError("Please insert a EVEN OR ODD"));
             }
-          }while(!type2.equals("EVEN") && !type2.equals("ODD"));
-          if(type2.equals("EVEN")) {
-            Ruleta.optionBets.add(2,true);
-            Ruleta.moneyBets.add(1,money);
-          }
-          else {
-            Ruleta.optionBets.add(3,true);
-            Ruleta.moneyBets.add(1,money);
-          }
+          } while (!evenOddChoice.equals("EVEN") && !evenOddChoice.equals("ODD"));
+
           break;
+
         case 3:
-          System.out.println("Please insert the amount to bet: ");
-          cant3=s.nextInt();
-          if((money-cant3)<0) {
-            System.out.println("You have not got this money");
-            continue;
-          }
-          money-=cant3;
-          Ruleta.moneyBets.add(2,cant3);
-          s.nextLine();
+          insertAmount();
+
           do {
             System.out.println("Input the type: HIGH(19-36) | LOW(1-19)");
-            type3=s.nextLine();
-            type3.toUpperCase();
-            if(!type3.equals("HIGH") && !type3.equals("LOW")) {
-              System.out.println(ConsoleColors.RED+"Please insert a HIGH OR LOW"+ConsoleColors.RESET);
+            Jugador.addChoice(s.nextLine()); // Aquí el jugador va a elegir una opción que podrá ser
+            // HIGH/LOW
+            highLowChoice = Jugador.getChoice(2);
+
+            if (!highLowChoice.equals("HIGH") && !highLowChoice.equals("LOW")) {
+              System.err.println(showAsError("Please insert a HIGH OR LOW"));
             }
-          }while(!type3.equals("HIGH") && !type3.equals("LOW"));
-          if(type3.equals("HIGH")) {
-            Ruleta.optionBets.add(4,true);
-            Ruleta.moneyBets.add(2,money);
-          }
-          else {
-            Ruleta.optionBets.add(5,true);
-            Ruleta.moneyBets.add(2,money);
-          }
+          } while (!highLowChoice.equals("HIGH") && !highLowChoice.equals("LOW"));
+
           break;
         case 4:
-          String val;
-          System.out.println();
-          System.out.println();
-          System.out.println();
-          int number=Ruleta.randomBall();
-          System.out.println("NUMBER ->"+number);
-          for(int i=0;i<Ruleta.optionBets.size();i++) {
-            if(Ruleta.optionBets.get(i).equals(true)) {
-              if(i<=1) {//If the user do a color bet
-                val=Ruleta.colorBall(number);
-                if(type1.equals(val)) {
-                  money=money+(cant1*2);
-                }
-              }
-              else if(i>=2 && i<=3) {//If the user do a even or odd bet
-                val=Ruleta.EvenOddBall(number);
-                if(type2.equals(val)) {
-                  money=money+(cant2*2);
-                }
-              }
-              else {//If the user do a high or low bet
-                val=Ruleta.HigherLowerThan(number);
-                if(type3.equals(val)) {
-                  money=money+(cant3*2);
-                }
-              }
-            }
-          }
-          Ruleta.Ruleta(); //Reinicialize the roulette
+          Ruleta.pushRoulette();
+
           break;
         case 5:
-          System.out.println(ConsoleColors.CYAN+"Goodbye");
+          System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
         default:
-          System.out.println(ConsoleColors.RED+"Error in the input option"+ConsoleColors.RESET);
+          System.err.println(showAsError("Error in the input option"));
       }
-    }while(option!=5);
+    } while (option != 5);
   }
+
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
         "Higher or lower bet", "Spin roulette");
     return roulette.manage();
   }
+
+  static void insertAmount() {
+    Scanner s = new Scanner(System.in);
+    System.out.print("Please insert the amount to bet: ");
+    int moneyBetted = validateNumber();
+
+    try {
+      Jugador.betMoney(moneyBetted);
+    } catch (NoMoneyException noMoney) {
+      System.err.println(noMoney);
+    }
+
+  }
+
+  public static int validateNumber() {
+    Scanner s = new Scanner(System.in);
+    boolean invalid = true;
+    int numToValidate = 0;
+    do {
+      // Checks that the input can be parsed as an int
+      if (s.hasNextInt()) {
+        numToValidate = s.nextInt();
+        // Advances the scanner to prevent input errors
+        s.nextLine();
+        // Sets the condition to false to break the loop
+        invalid = false;
+      } else {
+        System.err.print(showAsError("Invalid input.\nInsert number again:"));
+        // Advances the scanner to prevent input errors
+        s.nextLine();
+      }
+    } while (invalid); // The loop ends when the input is valid
+    return numToValidate;
+  }
+
+  public static String showAsError(String error) {
+    return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
+  }
+
 }
