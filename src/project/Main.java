@@ -148,17 +148,21 @@ public class Main {
 
           break;
         case 5:
+          Jugador.setMoney(500);
+          Jugador.restartRound();
+          break;
+        case 6:
           System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
         default:
           System.err.println(showAsError("Error in the input option"));
       }
-    } while (option != 5);
+    } while (option != 6);
   }
 
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
-        "Higher or lower bet", "Spin roulette");
+        "Higher or lower bet", "Spin roulette","Reset Game");
     return roulette.manage();
   }
 

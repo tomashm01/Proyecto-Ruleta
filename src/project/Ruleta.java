@@ -95,7 +95,7 @@ public class Ruleta {
     int ballNumber = Ruleta.randomBall();
     System.out.println("NUMBER ->" + ballNumber);
 
-    opcionesResultantes.addAll(List.of(Ruleta.colorBall(ballNumber), Ruleta.EvenOddBall(ballNumber),
+      opcionesResultantes.addAll(List.of(Ruleta.colorBall(ballNumber), Ruleta.EvenOddBall(ballNumber),
         Ruleta.HigherLowerThan(ballNumber)));
 
     System.out.print("Resultados:");

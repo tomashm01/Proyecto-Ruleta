@@ -35,6 +35,13 @@ public class Jugador {
   public static int getMoney() {
     return money;
   }
+  public static boolean setMoney(int n) {
+    if(n!=500) {
+      return false;
+    }
+    money=n;
+    return true;
+  }
 
   public static void setDni(String dni) {
     Jugador.dni = dni;
