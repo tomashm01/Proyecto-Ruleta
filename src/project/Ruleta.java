@@ -1,8 +1,10 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Ruleta {
@@ -83,10 +85,10 @@ public class Ruleta {
       val = "NULL";
       return val;
     } else if (n < 19) {
-      val = "LOWER";
+      val = "LOW";
       return val;
     } else if (n > 18) {
-      val = "HIGHER";
+      val = "HIGH";
       return val;
     }
     return val;
@@ -99,25 +101,45 @@ public class Ruleta {
     opcionesResultantes.addAll(List.of(Ruleta.colorBall(ballNumber), Ruleta.EvenOddBall(ballNumber),
         Ruleta.HigherLowerThan(ballNumber)));
 
-    Jugador.setFinalMoney();
+    System.out.print("Resultados:");
 
+    opcionesResultantes.forEach(resultados -> System.out.print(resultados + " "));
+    System.out.print("\nTus apuestas acertadas:");
+    Jugador.setFinalMoney();
     restartRoulette();
   }
 
 
 
-  static int calculateFinalMoney() {
-    Set<String> interSeccionDeOpciones = new HashSet<>(opcionesResultantes);
-    interSeccionDeOpciones.retainAll(Jugador.getOpcionesElegidas());
+  static int calculateFinalMoney() { // Mejorable
 
     int finalMoney = 0;
 
-    for (String opcionesAcertada : interSeccionDeOpciones) {
-      for (int i = 0; i < Jugador.getOpcionesElegidas().size(); i++) {
-        if (Jugador.getChoice(i).equals(opcionesAcertada)) {
-          finalMoney = Jugador.getOpcionesPagadas(i) * 2;
-        }
+    // Jugador.opcionesElegidas.values().forEach(values -> totalvalues+=values);
+    // No sé por qué eso no funciona :(
+    for (String opcionesAcertadas : opcionesResultantes) {
+      if (Jugador.opcionesElegidas.containsKey(opcionesAcertadas)) {
+        System.out.println(opcionesAcertadas);
+        finalMoney += Jugador.opcionesElegidas.get(opcionesAcertadas) * 2;
       }
+    }
+
+    Integer totalvalues = 0;
+    for (Integer i : Jugador.opcionesElegidas.values()) {
+      totalvalues += i;
+    }
+
+
+    if (finalMoney == 0) {
+      System.out.println(" Ninguna :(");
+
+    }
+    if (finalMoney - totalvalues > 0) {
+      System.out.println(
+          ConsoleColors.GREEN + "(+" + (finalMoney - totalvalues) + ")" + ConsoleColors.RESET);
+    } else {
+      System.out.println(
+          ConsoleColors.RED + "(" + (finalMoney - totalvalues) + ")" + ConsoleColors.RESET);
     }
 
     return finalMoney;
@@ -125,7 +147,7 @@ public class Ruleta {
   }
 
   private static void restartRoulette() {
-    opcionesResultantes = new HashSet<>();
+    opcionesResultantes.clear();
     Jugador.restartRound();
   }
 

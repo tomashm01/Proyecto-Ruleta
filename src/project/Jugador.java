@@ -1,8 +1,10 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 
 /*
  * 
@@ -19,9 +21,8 @@ import java.util.List;
 
 
 public class Jugador {
-
-  private static List<String> opcionesElegidas = new ArrayList<>();
-  private static List<Integer> opcionesPagadas = new ArrayList<>();
+  
+  static Map<String, Integer> opcionesElegidas = new HashMap<>();
 
   private static int money = 500;
   private static String dni = "";
@@ -36,24 +37,6 @@ public class Jugador {
     return money;
   }
 
-  public static String getChoice(int index) {
-    return opcionesElegidas.get(index);
-  }
-
-  public static int getOpcionesPagadas(int index) {
-    return opcionesPagadas.get(index);
-  }
-
-
-  public static List<String> getOpcionesElegidas() {
-    return opcionesElegidas;
-  }
-
-  public static void addChoice(String choice) {
-    choice = choice.toUpperCase();
-    opcionesElegidas.add(choice);
-  }
-
   public static void setDni(String dni) {
     Jugador.dni = dni;
   }
@@ -63,20 +46,23 @@ public class Jugador {
     if (money - bettedMoney < 0) {
       throw new NoMoneyException("You have not enough money to bet for this.");
     }
-    opcionesPagadas.add(bettedMoney);
-
+    
     money -= bettedMoney;
-
+    
   }
-
+  
+  public static void createBet(String choice, int moneyBetted) {
+    opcionesElegidas.put(choice, moneyBetted);
+  }
+  
   public static void restartRound() {
-    Jugador.opcionesElegidas = new ArrayList<>();
-    Jugador.opcionesPagadas = new ArrayList<>();
+    Jugador.opcionesElegidas.clear();
   }
 
   public static void setFinalMoney() {
     int finalMoney = Ruleta.calculateFinalMoney();
     Jugador.money += finalMoney;
+
   }
 
   /**
@@ -141,6 +127,8 @@ public class Jugador {
     dni = numDni + letterDni;
     return dni;
   }
+
+ 
 
 
 }

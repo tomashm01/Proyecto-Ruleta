@@ -83,7 +83,7 @@ public class Main {
 
         case 1:
 
-          insertAmount();
+          int moneyBetted = insertAmount();
 
           do {
 
@@ -93,49 +93,57 @@ public class Main {
             System.out.printf("|" + ConsoleColors.BLACK_BOLD + "%s",
                 " BLACK: " + ConsoleColors.RESET);
 
-            Jugador.addChoice(s.nextLine()); // Aquí el jugador va a elegir una opción que podrá ser
+            colorChoice = (s.nextLine().toUpperCase()); // Aquí el jugador va a elegir una opción
+                                                        // que podrá ser
             // RED / BLACK
-            colorChoice = Jugador.getChoice(0);
 
-            if (!colorChoice.equals("RED") || !colorChoice.equals("BLACK")) {
+            if (!colorChoice.equals("RED") && !colorChoice.equals("BLACK")) {
               System.err.println(showAsError("\nPlease insert a RED OR BLACK\n"));
             }
 
           } while (!colorChoice.equals("RED") && !colorChoice.equals("BLACK"));
+          Jugador.createBet(colorChoice, moneyBetted);
 
           break;
         case 2:
-          insertAmount();
+          moneyBetted = insertAmount();
+
 
           do {
-            System.out.print("Input the type: EVEN | ODD:");
-            Jugador.addChoice(s.nextLine()); // Aquí el jugador va a elegir una opción que podrá ser
+            System.out.print("Input the type:\nEVEN | ODD:");
+
+            evenOddChoice = s.nextLine().toUpperCase(); // Aquí el jugador va a elegir una opción
+                                                        // que podrá ser
             // EVEN/ODD
-            evenOddChoice = Jugador.getChoice(1);
 
             if (!evenOddChoice.equals("EVEN") && !evenOddChoice.equals("ODD")) {
               System.err.print(showAsError("Please insert a EVEN OR ODD"));
             }
           } while (!evenOddChoice.equals("EVEN") && !evenOddChoice.equals("ODD"));
 
+          Jugador.createBet(evenOddChoice, moneyBetted);
           break;
 
         case 3:
-          insertAmount();
+          moneyBetted = insertAmount();
 
           do {
-            System.out.println("Input the type: HIGH(19-36) | LOW(1-19)");
-            Jugador.addChoice(s.nextLine()); // Aquí el jugador va a elegir una opción que podrá ser
+            System.out.print("Input the type:\nHIGH(19-36) | LOW(1-19):");
+
+            highLowChoice = s.nextLine().toUpperCase();// Aquí el jugador va a elegir una opción que
+                                                       // podrá ser
             // HIGH/LOW
-            highLowChoice = Jugador.getChoice(2);
 
             if (!highLowChoice.equals("HIGH") && !highLowChoice.equals("LOW")) {
               System.err.println(showAsError("Please insert a HIGH OR LOW"));
             }
           } while (!highLowChoice.equals("HIGH") && !highLowChoice.equals("LOW"));
 
+          Jugador.createBet(highLowChoice, moneyBetted);
+
           break;
         case 4:
+
           Ruleta.pushRoulette();
 
           break;
@@ -154,7 +162,7 @@ public class Main {
     return roulette.manage();
   }
 
-  static void insertAmount() {
+  static int insertAmount() {
     Scanner s = new Scanner(System.in);
     System.out.print("Please insert the amount to bet: ");
     int moneyBetted = validateNumber();
@@ -164,7 +172,7 @@ public class Main {
     } catch (NoMoneyException noMoney) {
       System.err.println(noMoney);
     }
-
+    return moneyBetted;
   }
 
   public static int validateNumber() {
