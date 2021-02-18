@@ -3,6 +3,7 @@ package project;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.naming.NamingException;
 
 /*
  * 
@@ -39,11 +40,16 @@ public class Jugador {
     Jugador.dni = dni;
   }
 
-  public static void betMoney(int bettedMoney) throws NoMoneyException{
+  public static void betMoney(int bettedMoney) throws NoMoneyException, NegativeException{
 
+    if (bettedMoney < 0 ) {
+      throw new NegativeException("You can't input negative bets");
+    }
+      
     if (money - bettedMoney < 0) {
       throw new NoMoneyException("You have not enough money to bet for this.");
     }
+    
     
     money -= bettedMoney;
     

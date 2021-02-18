@@ -164,14 +164,25 @@ public class Main {
 
   static int insertAmount() {
     Scanner s = new Scanner(System.in);
-    System.out.print("Please insert the amount to bet: ");
-    int moneyBetted = validateNumber();
+    boolean invalid = true;
+    int moneyBetted = 0;
+    
+    do {
 
-    try {
-      Jugador.betMoney(moneyBetted);
-    } catch (NoMoneyException noMoney) {
-      System.err.println(noMoney);
-    }
+      System.out.print("Please insert the amount to bet: ");
+      moneyBetted = validateNumber();
+
+      try {
+        
+        Jugador.betMoney(moneyBetted);
+        invalid = false;
+      } catch (NoMoneyException | NegativeException noMoney) {
+       
+        System.err.println(noMoney);
+      }
+
+    } while (invalid);
+
     return moneyBetted;
   }
 
