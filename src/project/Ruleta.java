@@ -107,39 +107,49 @@ public class Ruleta {
   }
 
 
+  /**
+   * Se comprueban las opciones acertadas(RED/BLACK/EVEN...) y se multiplica el valor apostado de
+   * cada una por dos (Si la ha acertado claro)
+   * 
+   * @return
+   */
+  static int calcularGananciasTirada() { // Mejorable
 
-  static int calculateFinalMoney() { // Mejorable
-
-    int finalMoney = 0;
+    int gananciasTirada = 0;
 
     // Jugador.opcionesElegidas.values().forEach(values -> totalvalues+=values);
     // No sé por qué eso no funciona :(
-    for (String opcionesAcertadas : opcionesResultantes) {
-      if (Jugador.opcionesElegidas.containsKey(opcionesAcertadas)) {
+    for (String opcionesAcertadas : opcionesResultantes) {// Opciones resultantes son los valores
+                                                          // que han salido
+      if (Jugador.opcionesElegidas.containsKey(opcionesAcertadas)) { // Si las opciones elegidas
+                                                                     // coinciden con las que han
+                                                                     // salido
         System.out.println(opcionesAcertadas);
-        finalMoney += Jugador.opcionesElegidas.get(opcionesAcertadas) * 2;
+        gananciasTirada += Jugador.opcionesElegidas.get(opcionesAcertadas) * 2;
+        // Aumentará el dinero final por el valor realizado en esa apuesta duplicado 
+        //Es decir, tenemos opcionesElegidas (RED = 50) si el jugador ha acertado el RED se multiplica el 50 por 2 
       }
     }
 
-    Integer totalvalues = 0;
-    for (Integer i : Jugador.opcionesElegidas.values()) {
-      totalvalues += i;
+    Integer dineroApostadoTirada = 0;
+    for (Integer apostadoEnCadaOpcion : Jugador.opcionesElegidas.values()) {
+      dineroApostadoTirada += apostadoEnCadaOpcion; 
     }
 
 
-    if (finalMoney == 0) {
+    if (gananciasTirada == 0) {
       System.out.println(" Ninguna :(");
 
     }
-    if (finalMoney - totalvalues > 0) {
+    if (gananciasTirada - dineroApostadoTirada > 0) {
       System.out.println(
-          ConsoleColors.GREEN + "(+" + (finalMoney - totalvalues) + ")" + ConsoleColors.RESET);
+          ConsoleColors.GREEN + "(+" + (gananciasTirada - dineroApostadoTirada) + ")" + ConsoleColors.RESET);
     } else {
       System.out.println(
-          ConsoleColors.RED + "(" + (finalMoney - totalvalues) + ")" + ConsoleColors.RESET);
+          ConsoleColors.RED + "(" + (gananciasTirada - dineroApostadoTirada) + ")" + ConsoleColors.RESET);
     }
 
-    return finalMoney;
+    return gananciasTirada;
 
   }
 

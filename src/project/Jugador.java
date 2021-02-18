@@ -48,7 +48,11 @@ public class Jugador {
     money -= bettedMoney;
     
   }
-  
+  /**
+   * Apuesta a una opción y se añade aun diccionario Ejemplo: RED = 50
+   * @param choice
+   * @param moneyBetted
+   */
   public static void createBet(String choice, int moneyBetted) {
     opcionesElegidas.put(choice, moneyBetted);
   }
@@ -56,10 +60,12 @@ public class Jugador {
   public static void restartRound() {
     Jugador.opcionesElegidas.clear();
   }
-
+  /**
+   * Se calcula el dinero que la ruleta entrega al jugador y se suma a su cartera
+   */
   public static void setFinalMoney() {
-    int finalMoney = Ruleta.calculateFinalMoney();
-    Jugador.money += finalMoney;
+    int gananciasTirada = Ruleta.calcularGananciasTirada();
+    Jugador.money += gananciasTirada;
 
   }
 
