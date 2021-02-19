@@ -6,10 +6,10 @@ import java.util.Set;
 
 public class Ruleta {
 
-  private static Set<Apuesta> apuestasGanadoras = new HashSet<>();
+  private static Set<Apuesta> winningResults = new HashSet<>(); //Results of the ball which are winner
   private static Integer profitRoll; 
   private static int ballNumber;
-  private static Set<Apuesta> apuestasAcertadas;
+  private static Set<Apuesta> winningBets; //Winning bets of the user
   private static String resultsLastRoll;
   private static Integer moneyBetLastRoll;
 
@@ -26,48 +26,48 @@ public class Ruleta {
     return ballNumber;
   }
 
-  public static Set<Apuesta> getApuestasGanadoras() {
-    return apuestasGanadoras;
+  public static Set<Apuesta> getWinningResults() {
+    return winningResults;
   }
 
-  public static Set<Apuesta> getApuestasAcertadas() {
-    return apuestasAcertadas;
+  public static Set<Apuesta> getWinningBets() {
+    return winningBets;
   }
   
-  public static int getDineroApostadoUltimaPartida() {
+  public static int getMoneyBetLastRoll() {
     return moneyBetLastRoll;
   }
 
   //Setters
-  public static void setDineroApostadoUltimaPartida() {
+  
+  public static void setMoneyBetLastRoll() {
     moneyBetLastRoll = Jugador.playerBets.stream().mapToInt(apuesta -> apuesta.getAmount()).sum();
   }
 
   /*
-   * Se comprueban las opciones acertadas(RED/BLACK/EVEN...) y se multiplica el valor apostado de
-   * cada una por dos (Si la ha acertado claro)
-   * 
-   * @return
+   * This function calculate the total profit 
+   *
    */
-  public static void calcularGananciasTirada() {
+  
+  public static void calculateProfit() {
 
     profitRoll = 0;
 
-    apuestasAcertadas = new HashSet<Apuesta>(Jugador.playerBets);
+    winningBets = new HashSet<Apuesta>(Jugador.playerBets);
 
-    apuestasAcertadas.retainAll(apuestasGanadoras); // Intersección entre las apuestas ganadoras y
-                                                    // las apuestas del jugador
-
-    // Un stream() devuelve una secuencia de objetos que soportan varios métodos (devuelve cada
-    // apuesta)
-    // Un mapToInt() devuelve un valor entero (Calculado usando una función lambda)
-    profitRoll = apuestasAcertadas.stream()
-        .mapToInt(apuestaAcertada -> apuestaAcertada.getAmount() * 2).sum();
+    winningBets.retainAll(winningResults); // intersection between the resulting bets and the bets that the user has won
+                                                   
+    profitRoll = winningBets.stream()
+        .mapToInt(winningBets -> winningBets.getAmount() * 2).sum();
 
   }
 
-  private static void restartTirada() {
-    apuestasGanadoras.clear();
+  /*
+   * This function clear the ball results and the bets of the player
+   */
+  
+  private static void restarRoll() {
+    winningResults.clear();
     Jugador.restartRound();
   }
   
@@ -76,17 +76,20 @@ public class Ruleta {
    * 
    * @return int
    */
+  
   static int randomBall() {
-    int aleatorio = (int) (0 + Math.random() * (36 - 0) + 1);
-    return aleatorio;
+    int random = (int) (0 + Math.random() * (36 - 0) + 1);
+    return random;
   }
 
   /*
    * This function returns the color of the number
    * 
    * @param n
+   * 
    * @return String
    */
+  
   static String colorBall(int n) {
     String val = "";
     int size = 18;
@@ -112,8 +115,10 @@ public class Ruleta {
    * This function return if the number is Even or Odd
    * 
    * @param n
+   * 
    * @return String
    */
+  
   static String EvenOddBall(int n) {
     String val = "";
     if (n == 0) {
@@ -132,8 +137,10 @@ public class Ruleta {
    * This function return if the number is between 1-18, 19-36 or is 0.
    * 
    * @param n
+   * 
    * @return
    */
+  
   static String HigherLowerThan(int n) {
     String val = "";
     if (n == 0) {
@@ -148,21 +155,26 @@ public class Ruleta {
     }
     return val;
   }
-
+  
+  /*
+   * This function throw the ball
+   */
+  
   public static void pushRoulette() {
 
     ballNumber = Ruleta.randomBall();
 
-    apuestasGanadoras.addAll(List.of(new Apuesta(Ruleta.colorBall(ballNumber)),
+    winningResults.addAll(List.of(new Apuesta(Ruleta.colorBall(ballNumber)),
         new Apuesta(Ruleta.EvenOddBall(ballNumber)),
         new Apuesta(Ruleta.HigherLowerThan(ballNumber))));
 
     Jugador.setFinalMoney();
-    resultsLastRoll = apuestasGanadoras.toString();
-    setDineroApostadoUltimaPartida();
-    restartTirada();
+    resultsLastRoll = winningResults.toString();
+    setMoneyBetLastRoll();
+    restarRoll();
 
   }
+  
 }
 
 

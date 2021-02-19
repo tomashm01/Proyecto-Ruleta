@@ -48,25 +48,26 @@ public class Main {
   public static void main(String[] args) {
 
     clearScreen();
-    
+
     Scanner s = new Scanner(System.in);
 
     int option;
     boolean betRealised = false;
     boolean spunRoulette = false;
+
+    // User have 3 attemps to input a valid dni or a random dni is going to be asign to him
     
-    //User have 3 attemps to input a valid dni or a random dni is going to be asign to him
     if (!insertDni()) {
       setRandomDni();
     }
 
     do {
       clearScreen();
-      
+
       System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());
       System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
       if (betRealised) {
-        System.out.printf("%91s:%s\n " + ConsoleColors.RESET, "DINERO EN JUEGO",
+        System.out.printf("%91s:%s\n " + ConsoleColors.RESET, "MONEY IN GAME",
             Jugador.getMoneyInGame());
       }
 
@@ -74,7 +75,7 @@ public class Main {
         HUD.printBallNumber();
         HUD.printResults();
         HUD.printSucessfulBet();
-        HUD.mostrarGananciasTirada(Ruleta.getProfitRoll());   
+        HUD.printfBalanceRoll(Ruleta.getProfitRoll());
 
       }
 
@@ -122,20 +123,21 @@ public class Main {
     } while (option != 6);
   }
 
- 
-/*
- * This function clean the terminal screen
- */
-  public static void clearScreen() {  
-    System.out.print("\033[H\033[2J");  
-    System.out.flush();  
-}  
+  /*
+   * This function clean the terminal screen
+   */
 
+  public static void clearScreen() {
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
+  }
 
-/*
- * This function try to input the dni of the user
- * @return boolean
- */
+  /*
+   * This function try to input the dni of the user
+   * 
+   * @return boolean
+   */
+
   private static boolean insertDni() {
     Scanner s = new Scanner(System.in);
 
@@ -146,25 +148,35 @@ public class Main {
       System.out.printf(ConsoleColors.CYAN + "Please enter your DNI. (You have %d attempts):",
           count);
       String dni = s.nextLine();
-      
+
       if (!Jugador.validateDni(dni)) {
         count--;
       } else {
         Jugador.setDni(dni);
         return true;
       }
-      
+
     } while (count != 0);
     return false;
   }
-  
+
   /*
    * This function set a random dni
    */
+  
   private static void setRandomDni() {
     System.out.printf(ConsoleColors.RED + "%107s", "We have created a DNI for you.");
     Jugador.setDni(Jugador.randomDni());
   }
+
+  /*
+   * This function request a type of bet to the player, valide this type and returns it
+   * 
+   * @param String
+   * @param String
+   * 
+   * @return String
+   */
   
   private static String insertChoice(String possibleChoice1, String possibleChoice2) {
     Scanner s = new Scanner(System.in);
@@ -188,12 +200,20 @@ public class Main {
     return choice;
   }
 
+  /*
+   * This function print the roulette menu
+   */
+  
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
         "Higher or lower bet", "Spin roulette", "Reset Game");
     return roulette.manage();
   }
 
+  /*
+   * This function request a amount of money for the bet
+   */
+  
   static int insertAmount() {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
@@ -218,6 +238,12 @@ public class Main {
     return moneyBetted;
   }
 
+  /*
+   * This function validate if the input fact is a number
+   * 
+   * @return int
+   */
+  
   public static int validateNumber() {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
@@ -239,14 +265,34 @@ public class Main {
     return numToValidate;
   }
 
+  /*
+   * This function returns an error in the menu option
+   * 
+   * @param error
+   * 
+   * @return String
+   */
+  
   private static String showAsError(String error) {
     return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
 
   }
-
+  
+  /*
+   * This function returns an error of the choice option
+   * 
+   * @param String
+   * @param String
+   * @param String
+   * @param String
+   * @param String
+   * 
+   * @return String
+   */
+  
   public static String showAsError(String error, String string, String possibleChoice1,
       String string2, String possibleChoice2) {
     return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
   }
-
+  
 }

@@ -1,18 +1,19 @@
 package project;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Jugador {
+  
   static List<Apuesta> playerBets = new ArrayList<>();
   private static int money = 500;
   private static int moneyInGame = 0;
   private static String dni = "";
   static final double MAX = 99999999;
-  private static int dineroApostadoUltimaPartida = 0;
+  private static int moneyBettedLastRoll = 0;
   
   //Getters
+  
   public static String getDni() {
     return dni;
   }
@@ -24,12 +25,16 @@ public class Jugador {
   public static int getMoneyInGame() {
     return moneyInGame;
   }
+  
   //Setters
+  
   public static void setDni(String dni) {
     Jugador.dni = dni;
   }
   
- 
+  /*
+   * This function check if the bet money is correct
+   */
   
   public static void betMoney(int bettedMoney) throws NoMoneyException, NegativeException {
 
@@ -46,40 +51,52 @@ public class Jugador {
   }
 
   /**
-   * Apuesta a una opción y se añade aun diccionario Ejemplo: RED = 50
+   * This function add the option and the money bet in the dictionary
    * 
    * @param choice
    * @param moneyBetted
+   * 
    */
+  
   public static void createBet(String choice, int moneyBetted) {
     playerBets.add(new Apuesta(choice, moneyBetted));
   }
-
+  
+  /*
+   * This function restart the roll
+   */
+  
   public static void restartRound() {
     Jugador.playerBets.clear();
     Jugador.moneyInGame = 0;
   }
+  
+  /*
+   * This function restart the game
+   */
   
   public static void restartGame() {
     Jugador.money = 500;
   }
 
   /*
-   * Se calcula el dinero que la ruleta entrega al jugador y se suma a su cartera
-   * @return 
+   * This function calculate the total money to deliver to the player
    */
+  
   public static void setFinalMoney() {
-    Ruleta.calcularGananciasTirada();
+    Ruleta.calculateProfit();
     Jugador.money +=  Ruleta.getProfitRoll() - moneyInGame;
   }
   
 
   /*
-   * Function that validate if the dni which is passed by parameter is correct or incorrect
+   * This function validate if the dni which is passed by parameter is correct or incorrect
    * 
    * @param dni
+   * 
    * @return boolean
    */
+  
   static boolean validateDni(String dni) {
     // Array with all the possibles letters
     char[] lettersDni = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z',
@@ -122,6 +139,7 @@ public class Jugador {
    * 
    * @return String
    */
+  
   public static String randomDni() {
     // Generate a random dni
     String dni;
@@ -136,9 +154,5 @@ public class Jugador {
     dni = numDni + letterDni;
     return dni;
   }
-
   
-
-
-
 }
