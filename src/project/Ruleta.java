@@ -6,12 +6,12 @@ import java.util.Set;
 
 public class Ruleta {
 
-  // Conjuntos
-  // Set<String> conjuntoResultado = new HashSet<>(opcionesElegidas);
-
-  // conjuntoResultado.retainAll(conjunto1)
-
-  static Set<String> opcionesResultantes = new HashSet<>();
+  private static Set<Apuesta> apuestasGanadoras = new HashSet<>();
+  private static Integer gananciasTirada;
+  private static int ballNumber;
+  private static Set<Apuesta> apuestasAcertadas;
+  private static String resultadosUltimaPartida;
+  private static Integer dineroApostadoUltimaPartida;
 
   /**
    * This function generate a random value for the ball between 0-36
@@ -91,21 +91,28 @@ public class Ruleta {
     return val;
   }
 
-  static void pushRoulette() {
-    int ballNumber = Ruleta.randomBall();
-    System.out.println("NUMBER ->" + ballNumber);
+  public static void pushRoulette() {
 
-      opcionesResultantes.addAll(List.of(Ruleta.colorBall(ballNumber), Ruleta.EvenOddBall(ballNumber),
-        Ruleta.HigherLowerThan(ballNumber)));
+    ballNumber = Ruleta.randomBall();
 
-    System.out.print("Resultados:");
+    apuestasGanadoras.addAll(List.of(new Apuesta(Ruleta.colorBall(ballNumber)),
+        new Apuesta(Ruleta.EvenOddBall(ballNumber)),
+        new Apuesta(Ruleta.HigherLowerThan(ballNumber))));
 
-    opcionesResultantes.forEach(resultados -> System.out.print(resultados + " "));
-    System.out.print("\nTus apuestas acertadas:");
     Jugador.setFinalMoney();
-    restartRoulette();
+    resultadosUltimaPartida = apuestasGanadoras.toString();
+    setDineroApostadoUltimaPartida();
+    restartTirada();
+
   }
 
+  public static int getGananciasTirada() {
+    return gananciasTirada;
+  }
+
+  public static String getResultadosUltimaPartida() {
+    return resultadosUltimaPartida;
+  }
 
   /**
    * Se comprueban las opciones acertadas(RED/BLACK/EVEN...) y se multiplica el valor apostado de
@@ -113,51 +120,48 @@ public class Ruleta {
    * 
    * @return
    */
-  static int calcularGananciasTirada() { // Mejorable
+  public static void calcularGananciasTirada() {
 
-    int gananciasTirada = 0;
+    gananciasTirada = 0;
 
-    // Jugador.opcionesElegidas.values().forEach(values -> totalvalues+=values);
-    // No sé por qué eso no funciona :(
-    for (String opcionesAcertadas : opcionesResultantes) {// Opciones resultantes son los valores
-                                                          // que han salido
-      if (Jugador.opcionesElegidas.containsKey(opcionesAcertadas)) { // Si las opciones elegidas
-                                                                     // coinciden con las que han
-                                                                     // salido
-        System.out.println(opcionesAcertadas);
-        gananciasTirada += Jugador.opcionesElegidas.get(opcionesAcertadas) * 2;
-        // Aumentará el dinero final por el valor realizado en esa apuesta duplicado 
-        //Es decir, tenemos opcionesElegidas (RED = 50) si el jugador ha acertado el RED se multiplica el 50 por 2 
-      }
-    }
+    apuestasAcertadas = new HashSet<Apuesta>(Jugador.apuestasJugador);
 
-    Integer dineroApostadoTirada = 0;
-    for (Integer apostadoEnCadaOpcion : Jugador.opcionesElegidas.values()) {
-      dineroApostadoTirada += apostadoEnCadaOpcion; 
-    }
+    apuestasAcertadas.retainAll(apuestasGanadoras); // Intersección entre las apuestas ganadoras y
+                                                    // las apuestas del jugador
 
-
-    if (gananciasTirada == 0) {
-      System.out.println(" Ninguna :(");
-
-    }
-    if (gananciasTirada - dineroApostadoTirada > 0) {
-      System.out.println(
-          ConsoleColors.GREEN + "(+" + (gananciasTirada - dineroApostadoTirada) + ")" + ConsoleColors.RESET);
-    } else {
-      System.out.println(
-          ConsoleColors.RED + "(" + (gananciasTirada - dineroApostadoTirada) + ")" + ConsoleColors.RESET);
-    }
-
-    return gananciasTirada;
+    // Un stream() devuelve una secuencia de objetos que soportan varios métodos (devuelve cada
+    // apuesta)
+    // Un mapToInt() devuelve un valor entero (Calculado usando una función lambda)
+    gananciasTirada = apuestasAcertadas.stream()
+        .mapToInt(apuestaAcertada -> apuestaAcertada.getAmount() * 2).sum();
 
   }
 
-  private static void restartRoulette() {
-    opcionesResultantes.clear();
+  private static void restartTirada() {
+    apuestasGanadoras.clear();
     Jugador.restartRound();
   }
 
+  public static int getBallNumber() {
+    return ballNumber;
+  }
+
+  public static Set<Apuesta> getApuestasGanadoras() {
+    return apuestasGanadoras;
+  }
+
+  public static Set<Apuesta> getApuestasAcertadas() {
+    return apuestasAcertadas;
+  }
+
+  public static void setDineroApostadoUltimaPartida() {
+
+    dineroApostadoUltimaPartida = Jugador.apuestasJugador.stream().mapToInt(apuesta -> apuesta.getAmount()).sum();
+  }
+  
+  public static int getDineroApostadoUltimaPartida() {
+    return dineroApostadoUltimaPartida;
+  }
 
 }
 

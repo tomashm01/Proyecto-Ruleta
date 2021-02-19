@@ -1,9 +1,9 @@
 package project;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.naming.NamingException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /*
  * 
@@ -20,14 +20,13 @@ import javax.naming.NamingException;
 
 
 public class Jugador {
-  
-  static Map<String, Integer> opcionesElegidas = new HashMap<>();
-
+  static List<Apuesta> apuestasJugador = new ArrayList<>();
   private static int money = 500;
+  private static int dineroEnJuego = 0;
   private static String dni = "";
-
   static final double MAX = 99999999;
-
+  private static int dineroApostadoUltimaPartida = 0;
+  
   public static String getDni() {
     return dni;
   }
@@ -35,52 +34,57 @@ public class Jugador {
   public static int getMoney() {
     return money;
   }
-  public static boolean setMoney(int n) {
-    if(n!=500) {
-      return false;
-    }
-    money=n;
-    return true;
-  }
 
   public static void setDni(String dni) {
     Jugador.dni = dni;
   }
+  
+  public static int getDineroEnJuego() {
+    return dineroEnJuego;
+  }
+  
+  public static void betMoney(int bettedMoney) throws NoMoneyException, NegativeException {
 
-  public static void betMoney(int bettedMoney) throws NoMoneyException, NegativeException{
-
-    if (bettedMoney < 0 ) {
+    if (bettedMoney < 0) {
       throw new NegativeException("You can't input negative bets");
     }
-      
-    if (money - bettedMoney < 0) {
+
+    if (dineroEnJuego + bettedMoney > money) {
       throw new NoMoneyException("You have not enough money to bet for this.");
     }
-    
-    
-    money -= bettedMoney;
-    
+
+    dineroEnJuego += bettedMoney;
+
   }
+
   /**
    * Apuesta a una opción y se añade aun diccionario Ejemplo: RED = 50
+   * 
    * @param choice
    * @param moneyBetted
    */
   public static void createBet(String choice, int moneyBetted) {
-    opcionesElegidas.put(choice, moneyBetted);
+    apuestasJugador.add(new Apuesta(choice, moneyBetted));
+  }
+
+  public static void restartRound() {
+    Jugador.apuestasJugador.clear();
+    Jugador.dineroEnJuego = 0;
   }
   
-  public static void restartRound() {
-    Jugador.opcionesElegidas.clear();
+  public static void restartGame() {
+    Jugador.money = 500;
   }
+
   /**
    * Se calcula el dinero que la ruleta entrega al jugador y se suma a su cartera
+   * @return 
    */
   public static void setFinalMoney() {
-    int gananciasTirada = Ruleta.calcularGananciasTirada();
-    Jugador.money += gananciasTirada;
-
+    Ruleta.calcularGananciasTirada();
+    Jugador.money +=  Ruleta.getGananciasTirada() - dineroEnJuego;
   }
+  
 
   /**
    * Function that validate if the dni which is passed by parameter is correct or incorrect
@@ -145,7 +149,8 @@ public class Jugador {
     return dni;
   }
 
- 
+  
+
 
 
 }

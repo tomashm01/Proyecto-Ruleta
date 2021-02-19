@@ -1,5 +1,6 @@
 package project;
 
+import java.io.IOException;
 /**
  * Version Actual: 6 Clases Main.java: Mostramos un menú funcional con el que interactúa el usuario
  * Sus opciones son: 1ºApostar al color 2ºApostar a par o impar (Lo mismo pero diciendo si es par o
@@ -45,111 +46,76 @@ import java.util.Scanner;
 public class Main {
 
   public static void main(String[] args) {
-    int count = 3;
+
+    clearScreen();
+    
     Scanner s = new Scanner(System.in);
 
     int option;
 
-    String colorChoice = "";
-    String evenOddChoice = "";
-    String highLowChoice = "";
+ 
 
-    do {// User have 3 attemps to introduce a valid DNI
+    boolean apuestaRealizada = false;
+    boolean ruletaGirada = false;
 
-      System.out.printf(ConsoleColors.CYAN + "Please enter your DNI. (You have %d attempts):",
-          count);
-      String dni = s.nextLine();
-      if (!Jugador.validateDni(dni)) {
-        count--;
-      } else {
-        Jugador.setDni(dni);
-        break;
-      }
-    } while (count != 0);
-
-    if (count == 0) {// Random DNI
-      System.out.printf(ConsoleColors.RED + "%100s", "We have created a DNI for you.");
-      Jugador.setDni(Jugador.randomDni());
+    boolean validDni = insertDni();
+    if (!validDni) {
+      setRandomDni();
     }
 
     do {
+      clearScreen();
 
       System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());
       System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
+
+      if (apuestaRealizada) {
+        System.out.printf("%91s:%s\n " + ConsoleColors.RESET, "DINERO EN JUEGO",
+            Jugador.getDineroEnJuego());
+      }
+
+      if (ruletaGirada) {
+        HUD.printBallNumber();
+        HUD.printResults();
+        HUD.printApuestasAcertadas();
+        HUD.mostrarGananciasTirada(Ruleta.getGananciasTirada());   
+
+      }
 
       option = rouletteMenu();
 
       switch (option) {
 
         case 1:
-
           int moneyBetted = insertAmount();
-
-          do {
-
-            System.out.printf("%s", ConsoleColors.PURPLE + "Input the type\n");// Add -1 if you want
-                                                                               // to leave
-            System.out.printf(ConsoleColors.RED + "%4s", "RED " + ConsoleColors.RESET);
-            System.out.printf("|" + ConsoleColors.BLACK_BOLD + "%s",
-                " BLACK: " + ConsoleColors.RESET);
-
-            colorChoice = (s.nextLine().toUpperCase()); // Aquí el jugador va a elegir una opción
-                                                        // que podrá ser
-            // RED / BLACK
-
-            if (!colorChoice.equals("RED") && !colorChoice.equals("BLACK")) {
-              System.err.println(showAsError("\nPlease insert a RED OR BLACK\n"));
-            }
-
-          } while (!colorChoice.equals("RED") && !colorChoice.equals("BLACK"));
+          String red = Apuesta.POSSIBLE_BET_TYPES[0];
+          String black = Apuesta.POSSIBLE_BET_TYPES[1];
+          String colorChoice = insertChoice(red, black);
           Jugador.createBet(colorChoice, moneyBetted);
-
+          apuestaRealizada = true;
           break;
         case 2:
           moneyBetted = insertAmount();
-
-
-          do {
-            System.out.print("Input the type:\nEVEN | ODD:");
-
-            evenOddChoice = s.nextLine().toUpperCase(); // Aquí el jugador va a elegir una opción
-                                                        // que podrá ser
-            // EVEN/ODD
-
-            if (!evenOddChoice.equals("EVEN") && !evenOddChoice.equals("ODD")) {
-              System.err.print(showAsError("Please insert a EVEN OR ODD"));
-            }
-          } while (!evenOddChoice.equals("EVEN") && !evenOddChoice.equals("ODD"));
-
+          String even = Apuesta.POSSIBLE_BET_TYPES[2];
+          String odd = Apuesta.POSSIBLE_BET_TYPES[3];
+          String evenOddChoice = insertChoice(even, odd);
           Jugador.createBet(evenOddChoice, moneyBetted);
+          apuestaRealizada = true;
           break;
-
         case 3:
           moneyBetted = insertAmount();
-
-          do {
-            System.out.print("Input the type:\nHIGH(19-36) | LOW(1-19):");
-
-            highLowChoice = s.nextLine().toUpperCase();// Aquí el jugador va a elegir una opción que
-                                                       // podrá ser
-            // HIGH/LOW
-
-            if (!highLowChoice.equals("HIGH") && !highLowChoice.equals("LOW")) {
-              System.err.println(showAsError("Please insert a HIGH OR LOW"));
-            }
-          } while (!highLowChoice.equals("HIGH") && !highLowChoice.equals("LOW"));
-
+          String high = Apuesta.POSSIBLE_BET_TYPES[4];
+          String low = Apuesta.POSSIBLE_BET_TYPES[5];
+          String highLowChoice = insertChoice(high, low);
           Jugador.createBet(highLowChoice, moneyBetted);
-
+          apuestaRealizada = true;
           break;
         case 4:
-
           Ruleta.pushRoulette();
-
+          ruletaGirada = true;
           break;
         case 5:
-          Jugador.setMoney(500);
-          Jugador.restartRound();
+          Jugador.restartGame();
           break;
         case 6:
           System.out.println(ConsoleColors.CYAN + "Goodbye");
@@ -160,9 +126,67 @@ public class Main {
     } while (option != 6);
   }
 
+ 
+
+  public static void clearScreen() {  
+    System.out.print("\033[H\033[2J");  
+    System.out.flush();  
+}  
+
+
+
+  private static boolean insertDni() {
+    Scanner s = new Scanner(System.in);
+
+    int count = 3;
+
+    do {// User have 3 attemps to introduce a valid DNI
+
+      System.out.printf(ConsoleColors.CYAN + "Please enter your DNI. (You have %d attempts):",
+          count);
+      String dni = s.nextLine();
+      
+      if (!Jugador.validateDni(dni)) {
+        count--;
+      } else {
+        Jugador.setDni(dni);
+        return true;
+      }
+      
+    } while (count != 0);
+    return false;
+  }
+  
+  private static void setRandomDni() {
+    System.out.printf(ConsoleColors.RED + "%107s", "We have created a DNI for you.");
+    Jugador.setDni(Jugador.randomDni());
+  }
+  
+  private static String insertChoice(String possibleChoice1, String possibleChoice2) {
+    Scanner s = new Scanner(System.in);
+    String choice;
+
+    do {
+
+      HUD.printInputType(possibleChoice1, possibleChoice2);// Add -1 if you want to leave
+      // HUD.printRedBlackChoice();
+
+      choice = (s.nextLine().toUpperCase());
+
+      if (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2)) {
+
+        System.out.printf(showAsError("%s %s %s %s\n"), "\nPlease insert", possibleChoice1, " OR ",
+            possibleChoice2);
+      }
+
+    } while (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2));
+
+    return choice;
+  }
+
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
-        "Higher or lower bet", "Spin roulette","Reset Game");
+        "Higher or lower bet", "Spin roulette", "Reset Game");
     return roulette.manage();
   }
 
@@ -170,18 +194,18 @@ public class Main {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
     int moneyBetted = 0;
-    
+
     do {
 
       System.out.print("Please insert the amount to bet: ");
       moneyBetted = validateNumber();
 
       try {
-        
+
         Jugador.betMoney(moneyBetted);
         invalid = false;
       } catch (NoMoneyException | NegativeException noMoney) {
-       
+
         System.err.println(noMoney);
       }
 
@@ -211,7 +235,13 @@ public class Main {
     return numToValidate;
   }
 
-  public static String showAsError(String error) {
+  private static String showAsError(String error) {
+    return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
+
+  }
+
+  public static String showAsError(String error, String string, String possibleChoice1,
+      String string2, String possibleChoice2) {
     return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
   }
 
