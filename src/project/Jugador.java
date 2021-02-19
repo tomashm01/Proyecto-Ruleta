@@ -4,29 +4,15 @@ package project;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/*
- * 
- * Name: Ruleta.java
- * 
- * 
- * Author: Tomás Hidalgo Martín
- * 
- * Description: Class Jugador, this class generate a player object.
- * 
- * Version:1.0
- * 
- */
-
-
 public class Jugador {
-  static List<Apuesta> apuestasJugador = new ArrayList<>();
+  static List<Apuesta> playerBets = new ArrayList<>();
   private static int money = 500;
-  private static int dineroEnJuego = 0;
+  private static int moneyInGame = 0;
   private static String dni = "";
   static final double MAX = 99999999;
   private static int dineroApostadoUltimaPartida = 0;
   
+  //Getters
   public static String getDni() {
     return dni;
   }
@@ -35,13 +21,15 @@ public class Jugador {
     return money;
   }
 
+  public static int getMoneyInGame() {
+    return moneyInGame;
+  }
+  //Setters
   public static void setDni(String dni) {
     Jugador.dni = dni;
   }
   
-  public static int getDineroEnJuego() {
-    return dineroEnJuego;
-  }
+ 
   
   public static void betMoney(int bettedMoney) throws NoMoneyException, NegativeException {
 
@@ -49,11 +37,11 @@ public class Jugador {
       throw new NegativeException("You can't input negative bets");
     }
 
-    if (dineroEnJuego + bettedMoney > money) {
+    if (moneyInGame + bettedMoney > money) {
       throw new NoMoneyException("You have not enough money to bet for this.");
     }
 
-    dineroEnJuego += bettedMoney;
+    moneyInGame += bettedMoney;
 
   }
 
@@ -64,29 +52,29 @@ public class Jugador {
    * @param moneyBetted
    */
   public static void createBet(String choice, int moneyBetted) {
-    apuestasJugador.add(new Apuesta(choice, moneyBetted));
+    playerBets.add(new Apuesta(choice, moneyBetted));
   }
 
   public static void restartRound() {
-    Jugador.apuestasJugador.clear();
-    Jugador.dineroEnJuego = 0;
+    Jugador.playerBets.clear();
+    Jugador.moneyInGame = 0;
   }
   
   public static void restartGame() {
     Jugador.money = 500;
   }
 
-  /**
+  /*
    * Se calcula el dinero que la ruleta entrega al jugador y se suma a su cartera
    * @return 
    */
   public static void setFinalMoney() {
     Ruleta.calcularGananciasTirada();
-    Jugador.money +=  Ruleta.getGananciasTirada() - dineroEnJuego;
+    Jugador.money +=  Ruleta.getProfitRoll() - moneyInGame;
   }
   
 
-  /**
+  /*
    * Function that validate if the dni which is passed by parameter is correct or incorrect
    * 
    * @param dni
@@ -129,8 +117,8 @@ public class Jugador {
     return true;
   }
 
-  /**
-   * This function generate a random Dni
+  /*
+   * This function generate a random Dni and return it
    * 
    * @return String
    */

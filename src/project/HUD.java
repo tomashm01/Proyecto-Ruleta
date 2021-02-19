@@ -1,10 +1,5 @@
 package project;
 
-/**
- * Esta clase es utilizada para mostrar el HUD de nuestro juego
- *
- *
- */
 public class HUD {
 
   public static void mostrarGananciasTirada(Integer gananciasTirada) {
@@ -18,22 +13,28 @@ public class HUD {
           + ConsoleColors.RESET);
     }
   }
-
+  /*
+   * This function print the number on the roulette
+   */
   public static void printBallNumber() {
     System.out.printf("%41s%d\n", "NUMBER ->",Ruleta.getBallNumber());
 
   }
-
+  /*
+   * This function prints the results of the ball
+   */
   public static void printResults() {
-    System.out.printf("%44s","Resultados:");
-    System.out.println(Ruleta.getResultadosUltimaPartida());
+    System.out.printf("%44s","Results:");
+    System.out.println(Ruleta.getResultsLastRoll());
    
   }
+  /*
+   * This function prints all the sucessful bets
+   */
+  public static void printSucessfulBet() {
 
-  public static void printApuestasAcertadas() {
-
-    System.out.printf("%56s","Tus apuestas acertadas:");
-    if (Ruleta.getGananciasTirada() == 0) {
+    System.out.printf("%56s","Winning bets:");
+    if (Ruleta.getProfitRoll() == 0) {
       System.out.println(" Ninguna :(");
     } else {
       System.out.println(Ruleta.getApuestasAcertadas().toString());

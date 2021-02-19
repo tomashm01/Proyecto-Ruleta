@@ -52,33 +52,29 @@ public class Main {
     Scanner s = new Scanner(System.in);
 
     int option;
-
- 
-
-    boolean apuestaRealizada = false;
-    boolean ruletaGirada = false;
-
-    boolean validDni = insertDni();
-    if (!validDni) {
+    boolean betRealised = false;
+    boolean spunRoulette = false;
+    
+    //User have 3 attemps to input a valid dni or a random dni is going to be asign to him
+    if (!insertDni()) {
       setRandomDni();
     }
 
     do {
       clearScreen();
-
+      
       System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());
       System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
-
-      if (apuestaRealizada) {
+      if (betRealised) {
         System.out.printf("%91s:%s\n " + ConsoleColors.RESET, "DINERO EN JUEGO",
-            Jugador.getDineroEnJuego());
+            Jugador.getMoneyInGame());
       }
 
-      if (ruletaGirada) {
+      if (spunRoulette) {
         HUD.printBallNumber();
         HUD.printResults();
-        HUD.printApuestasAcertadas();
-        HUD.mostrarGananciasTirada(Ruleta.getGananciasTirada());   
+        HUD.printSucessfulBet();
+        HUD.mostrarGananciasTirada(Ruleta.getProfitRoll());   
 
       }
 
@@ -92,7 +88,7 @@ public class Main {
           String black = Apuesta.POSSIBLE_BET_TYPES[1];
           String colorChoice = insertChoice(red, black);
           Jugador.createBet(colorChoice, moneyBetted);
-          apuestaRealizada = true;
+          betRealised = true;
           break;
         case 2:
           moneyBetted = insertAmount();
@@ -100,7 +96,7 @@ public class Main {
           String odd = Apuesta.POSSIBLE_BET_TYPES[3];
           String evenOddChoice = insertChoice(even, odd);
           Jugador.createBet(evenOddChoice, moneyBetted);
-          apuestaRealizada = true;
+          betRealised = true;
           break;
         case 3:
           moneyBetted = insertAmount();
@@ -108,11 +104,11 @@ public class Main {
           String low = Apuesta.POSSIBLE_BET_TYPES[5];
           String highLowChoice = insertChoice(high, low);
           Jugador.createBet(highLowChoice, moneyBetted);
-          apuestaRealizada = true;
+          betRealised = true;
           break;
         case 4:
           Ruleta.pushRoulette();
-          ruletaGirada = true;
+          spunRoulette = true;
           break;
         case 5:
           Jugador.restartGame();
@@ -127,14 +123,19 @@ public class Main {
   }
 
  
-
+/*
+ * This function clean the terminal screen
+ */
   public static void clearScreen() {  
     System.out.print("\033[H\033[2J");  
     System.out.flush();  
 }  
 
 
-
+/*
+ * This function try to input the dni of the user
+ * @return boolean
+ */
   private static boolean insertDni() {
     Scanner s = new Scanner(System.in);
 
@@ -157,6 +158,9 @@ public class Main {
     return false;
   }
   
+  /*
+   * This function set a random dni
+   */
   private static void setRandomDni() {
     System.out.printf(ConsoleColors.RED + "%107s", "We have created a DNI for you.");
     Jugador.setDni(Jugador.randomDni());

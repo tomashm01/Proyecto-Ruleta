@@ -1,15 +1,5 @@
 package project;
 
-/*
- * Name: ConsoleColors.java
- * 
- * Author: Tomás Hidalgo Martín
- * 
- * Description: Class that change the colors in console of the text. Very important to use in error situations.
- * 
- * Version:1.0
- * 
- */
 public class ConsoleColors {
   // Reset
   public static final String RESET = "\033[0m";  // Text Reset

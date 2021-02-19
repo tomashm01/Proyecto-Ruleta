@@ -19,10 +19,6 @@ public class Apuesta extends Jugador {
     return amount;
   }
 
-  public void setAmount(int amount) {
-    this.amount = amount;
-  }
-
   public String getType() {
     return type;
   }
