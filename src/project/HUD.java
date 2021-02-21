@@ -1,61 +1,68 @@
 package project;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class HUD {
 
-  /*
-   * This function print the balance of the roll
-   */
-  
-  public static void printfBalanceRoll(Integer profitRoll) {
-    
-    System.out.printf("%55s:", "Balance of this roll");
-    if (profitRoll - Ruleta.getMoneyBetLastRoll() > 0) {
-      System.out.println(ConsoleColors.GREEN + "(+" + (profitRoll - Ruleta.getMoneyBetLastRoll()) + ")"
-          + ConsoleColors.RESET);
-    } else {
-      System.out.println(ConsoleColors.RED + "(" + (profitRoll - Ruleta.getMoneyBetLastRoll()) + ")"
-          + ConsoleColors.RESET);
-    }
-  }
   
   /*
    * This function print the number on the roulette
    */
-  
   public static void printBallNumber() {
-    System.out.printf("%41s%d\n", "NUMBER ->",Ruleta.getBallNumber());
-
+    if (Ruleta.getHistoricoDeBolas() != null) {
+      System.out.println("");
+      System.out.printf("%42s", "NUMBERS->");  
+      
+      List<Bola> reverse = new ArrayList<Bola>(Ruleta.getHistoricoDeBolas());
+      Collections.reverse(reverse);
+      if (reverse.size() > 10) {
+        reverse.removeIf(bola -> reverse.indexOf(bola) > 10 );       
+      }
+      reverse.forEach(bola -> System.out.print(bola.getNumber() + " "));
+    }
   }
   
-  /*
-   * This function prints the results of the ball
-   */
-  
-  public static void printResults() {
-    System.out.printf("%44s","Results:");
-    System.out.println(Ruleta.getResultsLastRoll());
-   
+  public static void printBallResults() {
+    System.out.printf("\n%41s","Results:");
+    System.out.println(Ruleta.getHistoricoDeBolas().get(Ruleta.getHistoricoDeBolas().size()-1).getResults());
   }
-  
-  /*
-   * This function prints all the successful bets
-   */
   
   public static void printSucessfulBet() {
-
-    System.out.printf("%56s","Winning bets:");
-    if (Ruleta.getProfitRoll() == 0) {
-      System.out.println(" Nothing :(");
-    } else {
-      System.out.println(Ruleta.getWinningBets().toString());
+    System.out.printf("%46s","Winning bets:");
+    if (Ruleta.getHistoricoDeApuestasGanadoras().get(Ruleta.getHistoricoDeApuestasGanadoras().size()-1).size() == 0) {
+      System.out.println("No ganaste ninguna apuesta :(");
+    }else {
+      System.out.println(Ruleta.getHistoricoDeApuestasGanadoras().get(Ruleta.getHistoricoDeApuestasGanadoras().size()-1));
     }
-
+  }
+  
+  public static void printBets() {
+    System.out.printf("%48s","Your last bets:");
+    if (Jugada.getHistoricoDeApuestas().get(Jugada.getHistoricoDeApuestas().size()-1).size() == 0) {
+      System.out.println("No realizaste ninguna apuesta :(");
+    }else {
+      System.out.println(Jugada.getHistoricoDeApuestas().get(Jugada.getHistoricoDeApuestas().size()-1));
+    }
+ }
+  
+ public static void printBalanceRoll() {
+    System.out.printf("%53s:", "Balance of this roll");
+    if (Jugada.getHistoricoDeBalances().get(Jugada.getHistoricoDeBalances().size()-1) > 0) {
+      System.out.print(ConsoleColors.GREEN);
+      System.out.println("+" + Jugada.getHistoricoDeBalances().get(Jugada.getHistoricoDeBalances().size()-1));
+      System.out.println(ConsoleColors.RESET);
+    }else {
+      System.out.print(ConsoleColors.RED);
+      System.out.println(Jugada.getHistoricoDeBalances().get(Jugada.getHistoricoDeBalances().size()-1));  
+      System.out.println(ConsoleColors.RESET);
+    }
   }
   
   /*
    * This function print the type of bet
-   */
-  
+   */  
   public static void printInputType(String possibleChoice1, String possibleChoice2) {
     System.out.printf("%s", ConsoleColors.PURPLE + "Input the type");
     System.out.print(" (" + possibleChoice1 + " | " + possibleChoice2 + "):");

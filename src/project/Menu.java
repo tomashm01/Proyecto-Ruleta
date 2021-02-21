@@ -1,44 +1,31 @@
 package project;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu{
   private String title = null;
-  private String[] options = null;
-
+  //private String[] options = null;
+  private List<String> options;
+  
   // Constructor
-  public Menu(String title_, String... options_) {
-    this.title = title_;
-    this.options = options_;
+  
+  public Menu(String title, String... options) {
+    this.title = title;
+    this.options = new ArrayList<>(Arrays.asList(options));
   }
-
-  /**
-   * This function add a new option
-   * 
-   * @param nuevaOpcion
-   */
-  public void addOption(String newOption) {
-    this.options = Arrays.copyOf(this.options, this.options.length + 1);
-    this.options[this.options.length - 1] = newOption;
-  }
-
-
-  /**
-   * This function shows the menu
-   */
+  
   private void showMenu() {
     System.out.printf("\n%40s\n\n", ConsoleColors.BLUE_BOLD + this.title);
-    for (int i = 0; i < this.options.length; i++) {
-      System.out.printf(ConsoleColors.GREEN + "option %d: %s\n", (i + 1), this.options[i]);
+    for (int i = 0; i < this.options.size(); i++) {
+      System.out.printf(ConsoleColors.GREEN + "option %d: %s\n", (i + 1), this.options.get(i));
     }
     // As all menus have the option to finish I will add it by default.
     System.out.printf(
         ConsoleColors.RESET + ConsoleColors.RED + "option %d: Go back" + ConsoleColors.RESET,
-        (this.options.length + 1));
-    if(Jugador.getMoney()<=0) {
-      addOption("Reset game");
-    }
+        (this.options.size() + 1));
   }
   /**
    * This function returns a chosen option
@@ -51,15 +38,15 @@ public class Menu{
 
       System.out.printf(
           ConsoleColors.RESET + ConsoleColors.BLUE_BOLD + "\n\nSelect one option(1-%d):",
-          this.options.length + 1);
+          this.options.size() + 1);
       System.out.print(ConsoleColors.RESET + ConsoleColors.YELLOW);
       chosenOption = Main.validateNumber();
-      if (chosenOption < 1 || chosenOption > this.options.length + 1) {
+      if (chosenOption < 1 || chosenOption > this.options.size() + 1) {
         System.out.println(ConsoleColors.RED + "Error en la entrada" + ConsoleColors.RESET);
         showMenu();
       }
 
-    } while (chosenOption < 1 || chosenOption > this.options.length + 1);
+    } while (chosenOption < 1 || chosenOption > this.options.size() + 1);
     return chosenOption;
   }
   /**

@@ -1,8 +1,9 @@
 package project;
 
-public class Apuesta extends Jugador {
+public class Apuesta {
   
-  public static final String[] POSSIBLE_BET_TYPES = {"RED","BLACK","EVEN","ODD","HIGH","LOW"};
+  public static final String[][] POSSIBLE_BET_TYPES = {{"BLACK","RED"},{"EVEN","ODD"},{"HIGH","LOW"}};
+  
   private Integer amount;
   private String type;
   
@@ -32,9 +33,11 @@ public class Apuesta extends Jugador {
   public void setType(String type) {
     this.type = type;
   }
-  
-  //Overrides
-  
+
+  public String toString() {
+    return this.getType();
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -59,9 +62,4 @@ public class Apuesta extends Jugador {
       return false;
     return true;
   }
-
-  public String toString() {
-    return this.getType();
-  }
-  
 }
