@@ -8,35 +8,38 @@ package project;
  */
 import java.util.Scanner;
 
-public class Main {
-
+public class Main{
+  public static int count=5;
   public static void main(String[] args) {
 
-    clearScreen();
 
     Scanner s = new Scanner(System.in);
-
-    int option;
+    int option=0;
     boolean betCompleted = false;
     boolean spunRoulette = false;
     Jugada jugadaDeEstaRonda = new Jugada();
-
+    
+    
     // User have 3 attemps to input a valid dni or a random dni is going to be asign to him
     clearScreen();
     if (!insertDni()) {
       setRandomDni();
     }
-
     do {
+      
       System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());
+      System.out.print(ConsoleColors.PURPLE+"Contador restante: "+ConsoleColors.RESET);
+      
       System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
-
+      
       if (betCompleted) {
         System.out.print(ConsoleColors.RESET);
         System.out.printf("%89s:%s\n ", "MONEY IN GAME",
             jugadaDeEstaRonda.getMoneyAtStake());
+        
         System.out.printf("%88s: ", "Current Bets");
         System.out.println(jugadaDeEstaRonda.getApuestasActuales());
+        
       }
 
       if (spunRoulette) {
@@ -48,9 +51,9 @@ public class Main {
         HUD.printBalanceRoll();
 
       }
-
-      option = rouletteMenu();
-
+     
+      option=rouletteMenu();   
+      
       switch (option) {
 
         case 1:
@@ -94,7 +97,7 @@ public class Main {
           System.err.println(showAsError("Error in the input option"));
       }
       clearScreen();
-    } while (option != 6);
+    } while (option != 6 );
   }
 
   /*

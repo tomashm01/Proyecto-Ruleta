@@ -45,13 +45,15 @@ public class Ruleta {
     ArrayList<Apuesta> apuestasGanadoras = new ArrayList<Apuesta>();
     List<String> stringApuestasGanadoras = new ArrayList<String>(nuevaBola.getResults());
     
-    stringApuestasGanadoras //Lista de resultados
+   //["RED","HIGH"]
+    stringApuestasGanadoras //Lista de resultados ["RED","EVEN","HIGH"]
         .retainAll//Utilizo retainAll para hacer la intersección entre la lista de resultados de la bola con el tipo de cada apuesta
         (miJugada.getApuestasActuales() //Obtengo las lista de apuestas de esta jugada
         .stream() //Utilizo Stream para recorrer cada objeto Apuesta
         .map(apuesta -> apuesta.getType()) //Utilizo map para obtener el tipo de cada apuesta en la lista (String)
         .collect(Collectors.toList())); //Utilizo collect para pasar cada tipo a un arrayList de Strings (para hacer la interseccion)
 
+    //["RED","HIGH"]
     stringApuestasGanadoras//ArrayList<String> de apuestas ganadoras ( quiero convertirla a ArrayList<Apuesta> )
       .forEach(element -> apuestasGanadoras //Por cada String de la lista win
       .add(miJugada.getApuestasActuales() //Añade al ArrayList<Apuesta> 
