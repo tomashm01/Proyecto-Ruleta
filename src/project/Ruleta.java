@@ -1,12 +1,18 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 public class Ruleta {
   static int numberRoll = 0;
-  static int vectorStats[]= {0,0,0,0,0,0};
+  static HashMap<String, String> estadisticas = new HashMap<String, String>();
+
   static List<ArrayList<Apuesta>> historicoDeApuestasGanadoras =
       new ArrayList<ArrayList<Apuesta>>();
   static List<Bola> historicoDeBolas = new ArrayList<Bola>();
@@ -47,30 +53,13 @@ public class Ruleta {
     ArrayList<Apuesta> apuestasGanadoras = new ArrayList<Apuesta>();
     List<String> stringApuestasGanadoras = new ArrayList<String>(nuevaBola.getResults());
 
-    // ["RED","HIGH"]
-    stringApuestasGanadoras // Lista de resultados ["RED","EVEN","HIGH"]
-        .retainAll// Utilizo retainAll para hacer la intersección entre la lista de resultados de la
-                  // bola con el tipo de cada apuesta
-        (miJugada.getApuestasActuales() // Obtengo las lista de apuestas de esta jugada
-            .stream() // Utilizo Stream para recorrer cada objeto Apuesta
-            .map(apuesta -> apuesta.getType()) // Utilizo map para obtener el tipo de cada apuesta
-                                               // en la lista (String)
-            .collect(Collectors.toList())); // Utilizo collect para pasar cada tipo a un arrayList
-                                            // de Strings (para hacer la interseccion)
 
-    // ["RED","HIGH"]
-    stringApuestasGanadoras// ArrayList<String> de apuestas ganadoras ( quiero convertirla a
-                           // ArrayList<Apuesta> )
-        .forEach(element -> apuestasGanadoras // Por cada String de la lista win
-            .add(miJugada.getApuestasActuales() // Añade al ArrayList<Apuesta>
-                .get(miJugada.getApuestasActuales().indexOf(new Apuesta(element))))); // La
-                                                                                      // referencia
-                                                                                      // a memoria
-                                                                                      // de una
-                                                                                      // apuesta con
-                                                                                      // el nombre
-                                                                                      // ganador
+    stringApuestasGanadoras.retainAll(miJugada.getApuestasActuales().stream()
+        .map(apuesta -> apuesta.getType()).collect(Collectors.toList()));
 
+
+    stringApuestasGanadoras.forEach(element -> apuestasGanadoras.add(miJugada.getApuestasActuales()
+        .get(miJugada.getApuestasActuales().indexOf(new Apuesta(element)))));
     setHistoricoDeApuestasGanadoras(apuestasGanadoras);
 
     return apuestasGanadoras.stream().mapToInt(winningBets -> winningBets.getAmount() * 2).sum(); // Devuelve
@@ -78,61 +67,44 @@ public class Ruleta {
                                                                                                   // ganancias
   }
 
-  public static void stadistics() throws divideByZero {
-    if (Ruleta.numberRoll == 0) {
-      throw new divideByZero("Stats cannot be calculated");
-
-    }
-    System.out.println();
-    for (int i = 0; i <= 2; i++) {
-      calculateStatsType(i);
-    }
+  public static void stadistics() {
+    calculateStatsType();
   }
 
-  public static void calculateStatsType(int j) {
-    int stat1 = 0, stat2 = 0;
-    float percentage1 = 0, percentage2 = 0;
-    String aux="";
-    //RED BLACK EVEN ODD HIGH LOW
-    if (j == 0) {
-      for (int i = 0; i < historicoDeBolas.size(); i++) {
-        if (historicoDeBolas.get(i).getResults().get(j).equals("RED")) {
-          stat1++;
-        } else {
-          stat2++;
-        }
+  public static void calculateStatsType() {
+    estadisticas.clear();
+    AtomicInteger redCount = new AtomicInteger();
+    AtomicInteger evenCount = new AtomicInteger();
+    AtomicInteger highCount = new AtomicInteger();
+    historicoDeBolas.stream().forEach(bola -> {
+      if (bola.color.equals("RED")) {
+        redCount.getAndIncrement();
       }
-      percentage1 = (float) ((float) stat1 / Ruleta.numberRoll) * 100;
-      percentage2 = (float) ((float) stat2 / Ruleta.numberRoll) * 100;
-      System.out.print(ConsoleColors.WHITE+"RED: " + (int)percentage1+"%  "+ConsoleColors.RESET);
-      System.out.println(ConsoleColors.WHITE+"BLACK: " + (int)percentage2+"%"+ConsoleColors.RESET);
-      System.out.println();
-    } else if (j == 1) {
-      for (int i = 0; i < historicoDeBolas.size(); i++) {
-        if (historicoDeBolas.get(i).getResults().get(j).equals("EVEN")) {
-          stat1++;
-        } else {
-          stat2++;
-        }
+      if (bola.EvenOdd.equals("EVEN")) {
+        evenCount.getAndIncrement();
       }
-      percentage1 = (float) ((float) stat1 / Ruleta.numberRoll) * 100;
-      percentage2 = (float) ((float) stat2 / Ruleta.numberRoll) * 100;
-      System.out.print(ConsoleColors.WHITE+"EVEN: " + (int)percentage1+"%  "+ConsoleColors.RESET);
-      System.out.println(ConsoleColors.WHITE+"ODD: " + (int)percentage2+"%"+ConsoleColors.RESET);
-      System.out.println();
-    } else {
-      for (int i = 0; i < historicoDeBolas.size(); i++) {
-        if (historicoDeBolas.get(i).getResults().get(j).equals("HIGH")) {
-          stat1++;
-        } else {
-          stat2++;
-        }
+      if (bola.HighLow.equals("HIGH")) {
+        highCount.getAndIncrement();
       }
-      percentage1 = (float) ((float) stat1 / Ruleta.numberRoll) * 100;
-      percentage2 = (float) ((float) stat2 / Ruleta.numberRoll) * 100;
-      System.out.print(ConsoleColors.WHITE+"HIGH: " + (int)percentage1+"%  "+ConsoleColors.RESET);
-      System.out.println(ConsoleColors.WHITE+"LOW: " + (int)percentage2+"%"+ConsoleColors.RESET);
-      System.out.println();
+    });
+    double redCountDouble = redCount.doubleValue()/historicoDeBolas.size();
+    double evenCountDouble = evenCount.doubleValue()/historicoDeBolas.size();
+    double highCountDouble = highCount.doubleValue()/historicoDeBolas.size();
+
+    ArrayList<Double> counters =
+        new ArrayList<Double>(Arrays.asList(redCountDouble, 1 - redCountDouble, evenCountDouble,
+            1 - evenCountDouble, highCountDouble, 1 - highCountDouble));
+    List<String> aux = new ArrayList<>();//Lista de una dimension
+    for (int i = 0; i < Apuesta.POSSIBLE_BET_TYPES.length ; i++) {
+      for (int j = 0; j < Apuesta.POSSIBLE_BET_TYPES[0].length; j++) {
+       aux.add(Apuesta.POSSIBLE_BET_TYPES[i][j]); 
+      }
+    }
+ 
+    int j = 0;
+    while(j< counters.size()){
+      estadisticas.put(aux.get(j), String.format("%.2f%%", ((counters.get(j) / historicoDeBolas.size()) * 100)));
+      j++;
     }
   }
 }

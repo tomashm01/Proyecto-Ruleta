@@ -69,5 +69,9 @@ public class HUD {
     System.out.print(" (" + possibleChoice1 + " | " + possibleChoice2 + "):");
   }
   
+  public static void printStadistics() {
+    Ruleta.estadisticas.forEach((key, value) -> System.out.println(key + " : " + value));
+  }
+  
 }
 

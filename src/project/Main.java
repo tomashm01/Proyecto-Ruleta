@@ -85,11 +85,11 @@ public class Main{
           betCompleted = false;
           break;
         case 5:
-          try {
+          if (spunRoulette) {
             Ruleta.stadistics();
-          }catch(divideByZero a) {
-            System.out.println("Stats cannot bet calculated");
-          }
+            HUD.printStadistics();
+          }else
+            System.out.println("No stadistics generated");
           break;
         case 6:
           Jugador.restartGame();

@@ -1,9 +1,9 @@
 package project;
 
-public class divideByZero extends Exception {
+public class divideByZeroException extends Exception {
   String error;
   
-  public divideByZero (String customErrorMessage) {
+  public divideByZeroException (String customErrorMessage) {
     this.error = customErrorMessage;
   }
   
