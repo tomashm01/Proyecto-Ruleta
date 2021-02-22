@@ -27,9 +27,7 @@ public class Main{
     }
     do {
       
-      System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());
-      System.out.print(ConsoleColors.PURPLE+"Contador restante: "+ConsoleColors.RESET);
-      
+      System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());      
       System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
       
       if (betCompleted) {
@@ -86,18 +84,24 @@ public class Main{
           spunRoulette = true;
           betCompleted = false;
           break;
-
         case 5:
-          Jugador.restartGame();
+          try {
+            Ruleta.stadistics();
+          }catch(divideByZero a) {
+            System.out.println("Stats cannot bet calculated");
+          }
           break;
         case 6:
+          Jugador.restartGame();
+          break;
+        case 7:
           System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
         default:
           System.err.println(showAsError("Error in the input option"));
       }
       clearScreen();
-    } while (option != 6 );
+    } while (option != 7 );
   }
 
   /*
@@ -179,7 +183,7 @@ public class Main{
 
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
-        "Higher or lower bet", "Spin roulette", "Reset Game");
+        "Higher or lower bet", "Spin roulette","Stadistics", "Reset Game");
     return roulette.manage();
   }
 

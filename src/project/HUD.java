@@ -13,7 +13,8 @@ public class HUD {
 
     if (Ruleta.getHistoricoDeBolas() != null) {
       System.out.println("");
-      System.out.printf("%42s", "NUMBERS->");  
+      System.out.printf("%60s\n","NEW NUMBER: |"+ConsoleColors.CYAN_BOLD+Ruleta.getHistoricoDeBolas().get(Ruleta.getHistoricoDeBolas().size()-1).getNumber()+ConsoleColors.RESET+"|");
+      System.out.printf("%42s", "NUMBERS->");
       
       List<Bola> reverse = new ArrayList<Bola>(Ruleta.getHistoricoDeBolas());
       Collections.reverse(reverse);
@@ -21,17 +22,6 @@ public class HUD {
         reverse.removeIf(bola -> reverse.indexOf(bola) > 10 );       
       }
       reverse.forEach(bola -> System.out.print(bola.getNumber() + " "));
-    }
-    
-    if(Ruleta.getHistoricoDeBolas()!=null) {
-      if(Ruleta.getHistoricoDeBolas().get(Ruleta.historicoDeBolas.size()-1).getColor().equals("RED")) {
-        System.out.println();
-        System.out.printf("%60s\n","NEW NUMBER: |"+ConsoleColors.RED+Ruleta.getHistoricoDeBolas().get(Ruleta.getHistoricoDeBolas().size()-1).getNumber()+ConsoleColors.RESET+"|");
-      }
-      else {
-        System.out.println();
-        System.out.printf("%60s\n","NEW NUMBER: |"+ConsoleColors.BLACK+Ruleta.getHistoricoDeBolas().get(Ruleta.getHistoricoDeBolas().size()-1).getNumber()+ConsoleColors.RESET+"|");
-      }
     }
   }
   

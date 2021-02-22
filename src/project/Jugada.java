@@ -78,7 +78,7 @@ public class Jugada {
    * @throws NoMoneyException
    * @throws NegativeException
    */
-  public void betMoney(int bettedMoney) throws NoMoneyException, NegativeException {
+  public void betMoney(int bettedMoney) throws NoMoneyException, NegativeException{
     if (bettedMoney < 0) {
       throw new NegativeException("You can't input negative bets");
     }
