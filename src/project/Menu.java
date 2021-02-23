@@ -5,18 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class Menu{
+public class Menu {
   private String title = null;
-  //private String[] options = null;
   private List<String> options;
-  
+
   // Constructor
-  
+
   public Menu(String title, String... options) {
     this.title = title;
     this.options = new ArrayList<>(Arrays.asList(options));
   }
-  
+
   private void showMenu() {
     System.out.printf("\n%40s\n\n", ConsoleColors.BLUE_BOLD + this.title);
     for (int i = 0; i < this.options.size(); i++) {
@@ -27,9 +26,9 @@ public class Menu{
         ConsoleColors.RESET + ConsoleColors.RED + "option %d: Go back" + ConsoleColors.RESET,
         (this.options.size() + 1));
   }
+
   /**
-   * This function returns a chosen option
-   * @return int
+   * @return chosen Option
    */
   private int selectOption() {
     Scanner s = new Scanner(System.in);
@@ -49,13 +48,15 @@ public class Menu{
     } while (chosenOption < 1 || chosenOption > this.options.size() + 1);
     return chosenOption;
   }
+
   /**
-   * This function print the menu and returns the select chosen option
+   * This function print menu and return given option
    * @return int
    */
   public int manage() {
     showMenu();
     return selectOption();
   }
+  
 }
 

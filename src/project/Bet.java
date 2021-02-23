@@ -1,25 +1,23 @@
 package project;
 
-public class Apuesta {
-  
+public class Bet {
+  //Bets can be 3 specific types (black or red) (even or odd) (high or low)
   public static final String[][] POSSIBLE_BET_TYPES = {{"BLACK","RED"},{"EVEN","ODD"},{"HIGH","LOW"}};
   
   private Integer amount;
   private String type;
   
   //Constructors
-  
-  public Apuesta(String type, Integer amount)  {
+  public Bet(String type, Integer amount)  { 
     this.amount = amount;
     this.type = type;
   }
-    
-  public Apuesta(String type) {
+  
+  public Bet(String type) {
     this.type = type;
   }
 
   //Getters
-  
   public int getAmount() {
     return amount;
   }
@@ -29,7 +27,6 @@ public class Apuesta {
   }
 
   //Setters
-  
   public void setType(String type) {
     this.type = type;
   }
@@ -54,12 +51,13 @@ public class Apuesta {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Apuesta other = (Apuesta) obj;
+    Bet other = (Bet) obj;  
     if (type == null) {
       if (other.type != null)
         return false;
-    } else if (!type.equals(other.type))
+    } else if (!type.equals(other.type)) //Bets are equals if they have the same type
       return false;
     return true;
   }
+  
 }

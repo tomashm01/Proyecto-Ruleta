@@ -3,22 +3,22 @@ package project;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class Bola {
+public class WinningNumber {
+  //A winning number has his own properties itself (He is even or odd, high or low, red or black)
+  private int winningNumber;
+  private String color; //It is called color instead of redBlack because maybe he is green
+  private String EvenOdd;
+  private String HighLow; //High: number is > 19, low: <= 18
 
-  public int number;
-  public String color;
-  public String EvenOdd;
-  public String HighLow;
-
-  public Bola() {
-    setRandomNumberToBall();
-    if (this.number == 0) {
+  public WinningNumber() {
+    setRandomNumber();
+    if (this.winningNumber == 0) {
       this.color = "GREEN";
       this.EvenOdd = "NULL";
       this.HighLow = "NULL";
     } else {
-      setColorBall();
-      setEvenOddBall();
+      setColor();
+      setEvenOdd();
       setHighLow();
     }
   }
@@ -34,7 +34,7 @@ public class Bola {
     this.color = color;
   }
   public int getNumber() {
-    return number;
+    return winningNumber;
   }
   public String getEvenOdd() {
     return EvenOdd;
@@ -43,15 +43,15 @@ public class Bola {
     return HighLow;
   }
   
-  public void setRandomNumberToBall() {
-    this.number = (int) (Math.random() * (36) + 1);
+  public void setRandomNumber() {
+    this.winningNumber = (int) (Math.random() * (36) + 1);
   }
 
-  public void setColorBall() {
+  public void setColor() {
 
-    int red[] = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
-    // int black[] = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35};
-    boolean isRed = IntStream.of(red).anyMatch(redNumber -> redNumber == this.number);
+    int reds[] = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
+    //Loop reds array, check if this.number match with some red.
+    boolean isRed = IntStream.of(reds).anyMatch(redNumber -> redNumber == this.winningNumber); 
 
     if (isRed) {
       this.color = "RED";
@@ -61,8 +61,8 @@ public class Bola {
 
   }
   
-  public void setEvenOddBall() {
-    if (this.number % 2 == 0) {
+  public void setEvenOdd() {
+    if (this.winningNumber % 2 == 0) {
       this.EvenOdd = "EVEN";
     } else {
       this.EvenOdd = "ODD";
@@ -73,10 +73,11 @@ public class Bola {
    * This function return if the number is between 1-18, 19-36 or is 0.
    */
   public void setHighLow() {
-    if (this.number < 19) {
+    if (this.winningNumber < 19) {
       this.HighLow = "LOW";
     } else {
       this.HighLow = "HIGH";
     } 
   }
+  
 }

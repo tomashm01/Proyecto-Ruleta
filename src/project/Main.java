@@ -1,98 +1,84 @@
 package project;
 
 /**
- * javac -d . Main.java Menu.java Ruleta.java Jugada.java Bola.java HUD.java Jugador.java
- * NoMoneyException.java NegativeException.java ConsoleColors.java Apuesta.java1
+ * javac -d . Main.java Menu.java Roulette.java Move.java WinningNumber.java HUD.java Player.java
+    ConsoleColors.java NoMoneyException.java Bet.java divideByZeroException.java
  * 
  * java project.Main
  */
 import java.util.Scanner;
 
-public class Main{
-  public static int count=5;
+public class Main {
+  final static int DNI_ATTEMPTS = 3;
+
   public static void main(String[] args) {
 
-
     Scanner s = new Scanner(System.in);
-    int option=0;
+    int option = 0;
     boolean betCompleted = false;
     boolean spunRoulette = false;
-    Jugada jugadaDeEstaRonda = new Jugada();
+    Move roundMovement = new Move();
+
+    // User has 3 attemps to input a valid dni or a random dni will be set
     
-    
-    // User have 3 attemps to input a valid dni or a random dni is going to be asign to him
     clearScreen();
-    if (!insertDni()) {
+    if (!dniExists()) {
       setRandomDni();
     }
     do {
-      
-      System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Jugador.getMoney());      
-      System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Jugador.getDni());
-      
+      HUD.printPlayerInfo();// Print money and DNI
       if (betCompleted) {
-        System.out.print(ConsoleColors.RESET);
-        System.out.printf("%89s:%s\n ", "MONEY IN GAME",
-            jugadaDeEstaRonda.getMoneyAtStake());
-        
-        System.out.printf("%88s: ", "Current Bets");
-        System.out.println(jugadaDeEstaRonda.getApuestasActuales());
-        
+        HUD.printBetsInfo(roundMovement); // Print currentBets and money at Stake
       }
-
       if (spunRoulette) {
-
-        HUD.printBallNumber();
-        HUD.printBallResults();
-        HUD.printBets();
-        HUD.printSucessfulBet();
-        HUD.printBalanceRoll();
-
+        HUD.printRouletteResults();
       }
-     
-      option=rouletteMenu();   
-      
+
+      option = rouletteMenu();
+
       switch (option) {
 
         case 1:
-          int moneyBetted = insertAmount(jugadaDeEstaRonda);
-          String red = Apuesta.POSSIBLE_BET_TYPES[0][0];
-          String black = Apuesta.POSSIBLE_BET_TYPES[0][1];
+          int moneyBetted = insertAmount(roundMovement);
+          String red = Bet.POSSIBLE_BET_TYPES[0][0];
+          String black = Bet.POSSIBLE_BET_TYPES[0][1];
           String colorChoice = insertChoice(red, black);
-          jugadaDeEstaRonda.addApuesta(colorChoice, moneyBetted);
+          roundMovement.addBet(colorChoice, moneyBetted);
           betCompleted = true;
           break;
         case 2:
-          moneyBetted = insertAmount(jugadaDeEstaRonda);
-          String even = Apuesta.POSSIBLE_BET_TYPES[1][0];
-          String odd = Apuesta.POSSIBLE_BET_TYPES[1][1];
+          moneyBetted = insertAmount(roundMovement);
+          String even = Bet.POSSIBLE_BET_TYPES[1][0];
+          String odd = Bet.POSSIBLE_BET_TYPES[1][1];
           String evenOddChoice = insertChoice(even, odd);
-          jugadaDeEstaRonda.addApuesta(evenOddChoice, moneyBetted);
+          roundMovement.addBet(evenOddChoice, moneyBetted);
           betCompleted = true;
           break;
         case 3:
-          moneyBetted = insertAmount(jugadaDeEstaRonda);
-          String high = Apuesta.POSSIBLE_BET_TYPES[2][0];
-          String low = Apuesta.POSSIBLE_BET_TYPES[2][1];
+          moneyBetted = insertAmount(roundMovement);
+          String high = Bet.POSSIBLE_BET_TYPES[2][0];
+          String low = Bet.POSSIBLE_BET_TYPES[2][1];
           String highLowChoice = insertChoice(high, low);
-          jugadaDeEstaRonda.addApuesta(highLowChoice, moneyBetted);
+          roundMovement.addBet(highLowChoice, moneyBetted);
           betCompleted = true;
           break;
         case 4:
-          Ruleta.pushRoulette(jugadaDeEstaRonda);
-          jugadaDeEstaRonda = new Jugada();
+          Roulette.spunRoulette(roundMovement);
+          roundMovement = new Move();
           spunRoulette = true;
           betCompleted = false;
           break;
         case 5:
           if (spunRoulette) {
-            Ruleta.stadistics();
-            HUD.printStadistics();
-          }else
-            System.out.println("No stadistics generated");
+            Roulette.calculateStatistics();
+            HUD.printStatistics();
+            System.out.print(ConsoleColors.PURPLE+"Press Enter to continue"+ConsoleColors.PURPLE);
+            s.nextLine();
+          } else
+            System.out.println("No statistics generated");
           break;
         case 6:
-          Jugador.restartGame();
+          Player.restartGame();
           break;
         case 7:
           System.out.println(ConsoleColors.CYAN + "Goodbye");
@@ -101,7 +87,7 @@ public class Main{
           System.err.println(showAsError("Error in the input option"));
       }
       clearScreen();
-    } while (option != 7 );
+    } while (option != 7);
   }
 
   /*
@@ -114,48 +100,46 @@ public class Main{
   }
 
   /*
-   * This function try to input the dni of the user
+   * return true if custom dni is set successfully to player.
    * 
    * @return boolean
    */
 
-  private static boolean insertDni() {
+  private static boolean dniExists() {
     Scanner s = new Scanner(System.in);
 
-    int count = 3;
+    int count = DNI_ATTEMPTS;
 
-    do {// User have 3 attemps to introduce a valid DNI
+    do {// User have n attemps to introduce a valid DNI
 
       System.out.printf(ConsoleColors.CYAN + "Please enter your DNI. (You have %d attempts):",
           count);
       String dni = s.nextLine();
 
-      if (!Jugador.validateDni(dni)) {
+      if (!Player.isValidDni(dni)) {
         count--;
       } else {
-        Jugador.setDni(dni);
+        Player.setDni(dni);
         return true;
       }
 
     } while (count != 0);
+
     return false;
   }
 
   /*
    * This function set a random dni
    */
-
   private static void setRandomDni() {
-    System.out.println(ConsoleColors.RED );
+    System.out.println(ConsoleColors.RED);
     System.out.printf("%107s", "We have created a DNI for you.");
-    Jugador.setDni(Jugador.randomDni());
+    Player.setDni(Player.generateRandomDni());
   }
 
   /*
    * This function request a type of bet to the player, valide this type and returns it
    */
-
-
   private static String insertChoice(String possibleChoice1, String possibleChoice2) {
     Scanner s = new Scanner(System.in);
     String choice;
@@ -163,7 +147,7 @@ public class Main{
     do {
 
       HUD.printInputType(possibleChoice1, possibleChoice2);
-      
+
       choice = (s.nextLine().toUpperCase());
 
       if (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2)) {
@@ -178,20 +162,18 @@ public class Main{
   }
 
   /*
-   * This function print the roulette menu
+   * Print roulette menu and return a chosen option
    */
-
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
-        "Higher or lower bet", "Spin roulette","Stadistics", "Reset Game");
+        "Higher or lower bet", "Spin roulette", "Stadistics", "Reset Game");
     return roulette.manage();
   }
 
   /*
    * This function request a amount of money for the bet
    */
-
-  static int insertAmount(Jugada jugadaDeEstaRonda) {
+  static int insertAmount(Move roundMovement) {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
     int moneyBetted = 0;
@@ -199,10 +181,9 @@ public class Main{
     do {
 
       System.out.print("Please insert the amount to bet: ");
-      moneyBetted = validateNumber();
-
+      moneyBetted = validateNumber(); // Checks if its a number
       try {
-        jugadaDeEstaRonda.betMoney(moneyBetted);
+        roundMovement.betMoney(moneyBetted); // Checks if you have enough money or input is negative
         invalid = false;
       } catch (NoMoneyException | NegativeException noMoney) {
         System.err.println(noMoney);
@@ -217,7 +198,6 @@ public class Main{
    * 
    * @return int
    */
-
   public static int validateNumber() {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
@@ -240,11 +220,11 @@ public class Main{
   }
 
   /*
-   * This function returns an error in the menu option
+   * This function show a message as error in console
    * 
    * @param error
    * 
-   * @return String
+   * @return error coloured
    */
   private static String showAsError(String error) {
     return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
