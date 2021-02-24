@@ -26,13 +26,12 @@ public class Main {
       setRandomDni();
     }
     do {
+      
       HUD.printPlayerInfo();// Print money and DNI
       if (betCompleted) {
         HUD.printBetsInfo(roundMovement); // Print currentBets and money at Stake
       }
-      if (spunRoulette) {
-        HUD.printRouletteResults();
-      }
+   
 
       option = rouletteMenu();
 
@@ -67,17 +66,18 @@ public class Main {
           
         case 4://Spin the roulette
           Roulette.spunRoulette(roundMovement);
+          HUD.printRouletteResults();
           roundMovement = new Move();
           spunRoulette = true;
           betCompleted = false;
+          printEnter(s);
           break;
           
         case 5://Print the stadistics
           if (spunRoulette) {
             Roulette.calculateStatistics();
             HUD.printStatistics();
-            System.out.print(ConsoleColors.PURPLE+"Press Enter to continue"+ConsoleColors.PURPLE);
-            s.nextLine();
+            printEnter(s);
           } else
             System.out.println("No statistics generated");
           break;
@@ -95,6 +95,11 @@ public class Main {
       }
       clearScreen();
     } while (option != 7);
+  }
+
+  private static void printEnter(Scanner s) {
+    System.out.print(ConsoleColors.PURPLE+"Press Enter to continue"+ConsoleColors.PURPLE);
+    s.nextLine();
   }
 
   /**
