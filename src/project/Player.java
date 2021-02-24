@@ -23,18 +23,26 @@ public class Player {
     Player.money = 500;
   }
 
-  /*
+  /**
    * This function sum the balance after move
+   * 
+   * @param Move
+   * 
    */
+  
   public static void setFinalMoney(Move playerMove) {
    Player.money += playerMove.getFinalBalance();
   }
 
-  /*
+  /**
    * This function validate if the dni which is passed by parameter is valid
+   * 
    * @param dni
+   * 
    * @return boolean
+   * 
    */
+  
   static boolean isValidDni(String dni) {
     String pattern = "^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$(?i)";
     //^[0-9]{8} -> first 8 characters must be numbers
@@ -56,8 +64,11 @@ public class Player {
     }
   }
 
-  /* 
+  /**
+   * This function generate a valid dni 
+   * 
    * @return random Dni
+   * 
    */
   public static String generateRandomDni() {
     int MAX = 99999999; 

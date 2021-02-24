@@ -10,6 +10,7 @@ public class WinningNumber {
   private String EvenOdd;
   private String HighLow; //High: number is > 19, low: <= 18
 
+  //Constructor
   public WinningNumber() {
     setRandomNumber();
     if (this.winningNumber == 0) {
@@ -22,11 +23,11 @@ public class WinningNumber {
       setHighLow();
     }
   }
-  //Getter list of results
+  //Getters and Setters
   public List<String> getResults() {
     return List.of(this.color,this.EvenOdd,this.HighLow);
   }
-  //Getters atributes
+
   public String getColor() {
     return color;
   }
@@ -69,9 +70,6 @@ public class WinningNumber {
     }
   }
   
-  /*
-   * This function return if the number is between 1-18, 19-36 or is 0.
-   */
   public void setHighLow() {
     if (this.winningNumber < 19) {
       this.HighLow = "LOW";

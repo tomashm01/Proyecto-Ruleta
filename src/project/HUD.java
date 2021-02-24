@@ -9,6 +9,31 @@ public class HUD {
   
   private static final int RANDOMNUMBER_REFRESH_RATE = 200;
 
+  //GETTERS
+  
+  private static WinningNumber getLastWinningNumber() {
+    return Roulette.getAllWinningNumbers().get(Roulette.getAllWinningNumbers().size() - 1);
+  }
+  
+  private static Integer getLastBlance() {
+    return Move.getAllBalances().get(Move.getAllBalances().size() - 1);
+  }
+
+  private static ArrayList<Bet> getLastBets() {
+    return Move.getAllBets().get(Move.getAllBets().size() - 1);
+  }
+  
+  private static ArrayList<Bet> lastSuccessfulBet() {
+    return Roulette.getAllWonBets().get(Roulette.getAllWonBets().size() - 1);
+  }
+  
+  /**
+   * This function print the info of the bet
+   * 
+   * @param Move
+   * 
+   */
+  
   public static void printBetsInfo(Move roundMovement) {
     System.out.print(ConsoleColors.RESET);
     System.out.printf("%89s:%s\n ", "MONEY IN GAME", roundMovement.getMoneyAtStake());
@@ -17,11 +42,21 @@ public class HUD {
     System.out.println(roundMovement.getCurrentBets());
   }
 
+  /**
+   *This function print the money and the dni of the player 
+   */
+  
   public static void printPlayerInfo() {
     System.out.printf(ConsoleColors.PURPLE + "\n%82s:%d\n", "MONEY", Player.getMoney());
     System.out.printf("%80s:%s\n " + ConsoleColors.RESET, "DNI", Player.getDni());
   }
 
+  /**
+   * This function print the winning number, the results of the winning numbers
+   * (red or black, even or odd, high or low), print the bets of the player,
+   * print the winning bets and the balance in this roll
+   */
+  
   public static void printRouletteResults() {
     printWinningNumber();
     printWinningNumberResults();
@@ -33,6 +68,7 @@ public class HUD {
   /*
    * This function print the number on the roulette
    */
+  
   public static void printWinningNumber() {
 
     System.out.printf(ConsoleColors.CYAN_BOLD + "\n%45s", "NEW NUMBER: ");
@@ -48,11 +84,22 @@ public class HUD {
     }
     reverse.forEach(bola -> System.out.print(bola.getNumber() + " "));
   }
-
+  
+  /*
+   * This function prints the winning number
+   */
+  
   private static void printTrulyWinningNumber() {
     printNumberWithColors(getLastWinningNumber());    
   }
 
+  /**
+   * This function print the numbers using ConsoleColors
+   * 
+   * @param WinningNumber
+   * 
+   */
+  
   private static void printNumberWithColors(WinningNumber someWinningNumber) {
    
     if (someWinningNumber.getColor().equals("RED")) {
@@ -74,22 +121,40 @@ public class HUD {
     }
   }
 
+  /**
+   * This function prints one number in red
+   * 
+   * @param WinningNumber
+   * 
+   */
+  
   private static void oneDigitPrint(WinningNumber someWinningNumber) {
     System.out.print(ConsoleColors.RED + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
     System.out.print("\b");
   }
-
+  
+  /**
+   * This function converts the winning number in String
+   * 
+   * @param WinningNumber
+   * 
+   */
+  
   private static boolean twoDigits(WinningNumber someWinningNumber) {
     return String.valueOf(someWinningNumber.getNumber()).length() == 2;
   }
-
+  
+  /**
+   * This function prints randoms numbers until the winning number comes out
+   */
+  
   private static void printRandomNumbers() {
     
     for (int i = 0; i < 10; i++) {
       WinningNumber random = new WinningNumber();
       printNumberWithColors(random);
       if (twoDigits(random)) {
-        System.out.print("\b\b\b\b");// Borra el anterior
+        System.out.print("\b\b\b\b");// Erase the before number
       }else {
         System.out.print("\b\b\b");
       }
@@ -101,16 +166,20 @@ public class HUD {
       }
     }
   }
-
-  private static WinningNumber getLastWinningNumber() {
-    return Roulette.getAllWinningNumbers().get(Roulette.getAllWinningNumbers().size() - 1);
-  }
-
+  
+  /**
+   * This function prints the results of the winning numbers
+   */
+  
   public static void printWinningNumberResults() {
     System.out.printf("\n%41s", "Results:");
     System.out.println(getLastWinningNumber().getResults());
   }
-
+  
+  /**
+   * This function print the bets which the player win
+   */
+  
   public static void printSuccessfulBet() {
     System.out.printf("%46s", "Winning bets:");
     if (lastSuccessfulBet().size() == 0) {
@@ -119,11 +188,11 @@ public class HUD {
       System.out.println(lastSuccessfulBet());
     }
   }
-
-  private static ArrayList<Bet> lastSuccessfulBet() {
-    return Roulette.getAllWonBets().get(Roulette.getAllWonBets().size() - 1);
-  }
-
+  
+  /**
+   *This function prints the bets of the player 
+   */
+  
   public static void printBets() {
     System.out.printf("%48s", "Your last bets:");
     if (getLastBets().size() == 0) {
@@ -132,11 +201,11 @@ public class HUD {
       System.out.println(getLastBets());
     }
   }
-
-  private static ArrayList<Bet> getLastBets() {
-    return Move.getAllBets().get(Move.getAllBets().size() - 1);
-  }
-
+  
+  /**
+   * This function print the balace in the roll
+   */
+  
   public static void printBalanceRoll() {
     System.out.printf("%53s:", "Balance of this roll");
     if (getLastBlance() > 0) {
@@ -150,18 +219,23 @@ public class HUD {
     }
   }
 
-  private static Integer getLastBlance() {
-    return Move.getAllBalances().get(Move.getAllBalances().size() - 1);
-  }
-
-  /*
+  /**
    * This function print the type of bet
+   * 
+   * @param String
+   * @param String
+   * 
    */
+  
   public static void printInputType(String possibleChoice1, String possibleChoice2) {
     System.out.printf("%s", ConsoleColors.PURPLE + "Input the type");
     System.out.print(" (" + possibleChoice1 + " | " + possibleChoice2 + "):");
   }
 
+  /*
+   * This function print the stadistics of the roulette
+   */
+  
   public static void printStatistics() {
     Roulette.getStatistics().forEach((key, value) -> System.out.println(key + " : " + value));
   }

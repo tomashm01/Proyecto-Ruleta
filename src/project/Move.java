@@ -22,7 +22,16 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   public static List<ArrayList<Bet>> getAllBets() {
     return allBets;
   }
-
+  
+  public void setMoneyAtStake() {
+    //Money at stake is money you have on your current Bets (before Roulette is spun)
+    this.moneyAtStake = currentBets.stream().mapToInt(bets -> bets.getAmount()).sum();
+  }
+  
+  public int getMoneyAtStake() {
+    return moneyAtStake;
+  }
+  
   public void setAllBets() {
     allBets.add((ArrayList<Bet>) currentBets);
   }
@@ -50,18 +59,27 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   }
 
   /**
-   * We need to overwrite a bet of the same type (Example: Red and Black are the same Type) Firstly
+   * This function is used when we need to overwrite a bet of the same type (Example: Red and Black are the same Type) Firstly
    * we remove a previous bet if his type is the same as the new bet Finally we add the new bet
    * 
-   * @param choice
-   * @param moneyBetted
+   * @param String
+   * @param int
+   * 
    */
+  
   public void addBet(String choice, int moneyBetted) {
     removeBetInCurrentBets(choice);
     currentBets.add(new Bet(choice, moneyBetted)); // Add the new bet
     setMoneyAtStake();
   }
-
+  
+  /**
+   * This function allows to remove the currents bets 
+   * 
+   * @param String
+   * 
+   */
+  
   private void removeBetInCurrentBets(String choice) {
     // We need an iterator to remove matching bets from currentBets
     Iterator<Bet> iterator = currentBets.iterator(); 
@@ -81,31 +99,24 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
 
   }
 
-  public int getMoneyAtStake() {
-    return moneyAtStake;
-  }
-
   /**
    * 
-   * Throw exceptions if bet is not valid
+   * This function throw exceptions if bet is not valid
    * 
    * @param bettedMoney
    * @throws NoMoneyException
    * @throws NegativeException
+   * 
    */
+  
   public void betMoney(int bettedMoney) throws NoMoneyException, NegativeException {
-    if (bettedMoney < 0) {
+    if (bettedMoney < 0) {//User try to bet a negative bet
       throw new NegativeException("You can't input negative bets");
     }
 
-    if (moneyAtStake + bettedMoney > Player.getMoney()) {
+    if (moneyAtStake + bettedMoney > Player.getMoney()) {//User try to bet more money than he has
       throw new NoMoneyException("You have not enough money to bet for this.");
     }
-  }
-  
-  public void setMoneyAtStake() {
-    //Money at stake is money you have on your current Bets (before Roulette is spun)
-    this.moneyAtStake = currentBets.stream().mapToInt(bets -> bets.getAmount()).sum();
   }
 }
 

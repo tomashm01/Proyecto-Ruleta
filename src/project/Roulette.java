@@ -13,60 +13,8 @@ public class Roulette {
   private static List<ArrayList<Bet>> allWonBets = new ArrayList<ArrayList<Bet>>();
   private static List<WinningNumber> allWinningNumbers = new ArrayList<WinningNumber>();
 
-  public static void spunRoulette(Move playerMove) {
-    // Create a random number
-    WinningNumber randomWinningNumber = new WinningNumber();
-    playerMove.setFinalBalance(randomWinningNumber);
-    Player.setFinalMoney(playerMove);
-    setAllWinningNumbers(randomWinningNumber);
-  }
-
-  public static int calculateProfit(Move playerMove, WinningNumber myWinningNumber) {
-
-    ArrayList<Bet> successfulBets = getSuccessfulBets(playerMove, myWinningNumber);
-
-    setAllWonBets(successfulBets); // Store every successfulBet
-
-    return successfulBets.stream().mapToInt(winningBets -> winningBets.getAmount() * 2).sum();
-    // Return profits from successfulBets
-
-  }
-
-  private static ArrayList<Bet> getSuccessfulBets(Move playerMove, WinningNumber myWinningNumber) {
-    // successfulBetTypes get the values from winningNumber as list<String>
-    List<String> successfulBetTypes = new ArrayList<String>(myWinningNumber.getResults());
-    // Now it retain with List of bets from user
-    successfulBetTypes.retainAll(currentBetsToString(playerMove));// retain of two List<String>
-
-    // We need to transform ArrayList<String> to ArrayList<Bet> in order to get the amount of each
-    // bet.
-    ArrayList<Bet> successfulBets = (ArrayList<Bet>) successfulBetTypes.stream()
-        .map(successfulBetType -> buildWonBets(playerMove, successfulBetType))
-        .collect(Collectors.toList());
-    return successfulBets;
-  }
-
-  /**
-   * @param playerMove
-   * @return List of bets done by the user (String)
-   */
-  private static List<String> currentBetsToString(Move playerMove) {
-    return playerMove.getCurrentBets().stream().map(bet -> bet.getType())
-        .collect(Collectors.toList());
-  }
-
-  /**
-   * 
-   * @param playerMove
-   * @param successfulBetType
-   * @return Using memory reference (equals from class Bet) (bet type) you can return each
-   *         successful bet
-   */
-  private static Bet buildWonBets(Move playerMove, String successfulBetType) {
-    return playerMove.getCurrentBets()
-        .get(playerMove.getCurrentBets().indexOf(new Bet(successfulBetType)));
-  }
-
+  //Setters and Getters
+  
   public static List<WinningNumber> getAllWinningNumbers() {
     return allWinningNumbers;
   }
@@ -75,30 +23,6 @@ public class Roulette {
     allWinningNumbers.add(lastWinningNumber);
   }
 
-  public static List<ArrayList<Bet>> getAllWonBets() {
-    return allWonBets;
-  }
-
-  private static void setAllWonBets(List<Bet> apuestasGanadoras) {
-    allWonBets.add((ArrayList<Bet>) apuestasGanadoras);
-  }
-
-  public static HashMap<String, String> getStatistics() {
-    return statistics;
-  }
-
-  public static void calculateStatistics() {
-    statistics.clear();
-    List<String> betTypes = transformPossibleBetTypesToList(); // Key hashmap {"RED","BLACK"...}
-    ArrayList<Double> odds = getProbabilities(); // Value (0.1, 0.n...) (Odds mean probabilities)
-    fillStatistics(betTypes, odds); // fill hashmap with keys and values
-  }
-  
-  // We can transform 2D array into 1D list in order to get everything easier
-  private static List<String> transformPossibleBetTypesToList() {
-    return Arrays.asList(Bet.POSSIBLE_BET_TYPES).stream().flatMap(x -> Arrays.asList(x).stream())
-        .collect(Collectors.toList());
-  }
   private static ArrayList<Double> getProbabilities() {
     // Create Atomic Integers to count inside a lambda
     AtomicInteger redCount = new AtomicInteger();
@@ -123,17 +47,125 @@ public class Roulette {
             atomicToProbability(highCount), 1 - atomicToProbability(highCount)));
   }
 
+  public static List<ArrayList<Bet>> getAllWonBets() {
+    return allWonBets;
+  }
+
+  private static Bet buildWonBets(Move playerMove, String successfulBetType) {
+    return playerMove.getCurrentBets()
+        .get(playerMove.getCurrentBets().indexOf(new Bet(successfulBetType)));
+  }
+
+  private static void setAllWonBets(List<Bet> apuestasGanadoras) {
+    allWonBets.add((ArrayList<Bet>) apuestasGanadoras);
+  }
+
+  public static HashMap<String, String> getStatistics() {
+    return statistics;
+  }
+  
+  /**
+   * This function spin the roulette
+   * 
+   * @param playerMove
+   */
+  
+  public static void spunRoulette(Move playerMove) {
+    // Create a random number
+    WinningNumber randomWinningNumber = new WinningNumber();
+    playerMove.setFinalBalance(randomWinningNumber);
+    Player.setFinalMoney(playerMove);
+    setAllWinningNumbers(randomWinningNumber);
+  }
+
+  /**
+   * This function calculate the profit int this roll for the player
+   * 
+   * @param playerMove
+   * @param myWinningNumber
+   * 
+   * @return int
+   * 
+   */
+  public static int calculateProfit(Move playerMove, WinningNumber myWinningNumber) {
+
+    ArrayList<Bet> successfulBets = getSuccessfulBets(playerMove, myWinningNumber);
+
+    setAllWonBets(successfulBets); // Store every successfulBet
+
+    return successfulBets.stream().mapToInt(winningBets -> winningBets.getAmount() * 2).sum();
+    // Return profits from successfulBets
+
+  }
+  /**
+   * This function put the bets that the user win in the ArrayList Bet and returns it
+   * 
+   * @param playerMove
+   * @param myWinningNumber
+   * 
+   * @return ArrayList
+   */
+  
+  private static ArrayList<Bet> getSuccessfulBets(Move playerMove, WinningNumber myWinningNumber) {
+    // successfulBetTypes get the values from winningNumber as list<String>
+    List<String> successfulBetTypes = new ArrayList<String>(myWinningNumber.getResults());
+    // Now it retain with List of bets from user
+    successfulBetTypes.retainAll(currentBetsToString(playerMove));// retain of two List<String>
+
+    // We need to transform ArrayList<String> to ArrayList<Bet> in order to get the amount of each
+    // bet.
+    ArrayList<Bet> successfulBets = (ArrayList<Bet>) successfulBetTypes.stream()
+        .map(successfulBetType -> buildWonBets(playerMove, successfulBetType))
+        .collect(Collectors.toList());
+    return successfulBets;
+  }
+
+  /**
+   * This function put the bet of the user in the ArrayList
+   * 
+   * @param playerMove
+   * 
+   * @return List of bets done by the user (String)
+   * 
+   */
+  
+  private static List<String> currentBetsToString(Move playerMove) {
+    return playerMove.getCurrentBets().stream().map(bet -> bet.getType())
+        .collect(Collectors.toList());
+  }
+  
+  /**
+   * This function calculate the stadistics of all the spins
+   */
+  
+  public static void calculateStatistics() {
+    statistics.clear();
+    List<String> betTypes = transformPossibleBetTypesToList(); // Key hashmap {"RED","BLACK"...}
+    ArrayList<Double> odds = getProbabilities(); // Value (0.1, 0.n...) (Odds mean probabilities)
+    fillStatistics(betTypes, odds); // fill hashmap with keys and values
+  }
+  
+  /**
+   * This function can transform 2D array into 1D list in order to get everything easier
+   */
+  
+  private static List<String> transformPossibleBetTypesToList() {
+    return Arrays.asList(Bet.POSSIBLE_BET_TYPES).stream().flatMap(x -> Arrays.asList(x).stream())
+        .collect(Collectors.toList());
+  }
+  
   private static double atomicToProbability(AtomicInteger count) {
     return count.doubleValue() / allWinningNumbers.size(); // Transform AtomicInteger to probability
   }
   
   /**
-   * We need to get every type {"RED","BLACK"...} to fill every hashmap key (betTypeList) We need to
+   * This function need to get every type {"RED","BLACK"...} to fill every hashmap key (betTypeList) We need to
    * get every probability {0.1,0.9...} to fill every hashmap value (AllWinningNumbersProbabilities)
    * 
    * @param betTypeList
    * @param AllWinningNumbersProbabilities
    */
+  
   private static void fillStatistics(List<String> betTypeList,
       ArrayList<Double> AllWinningNumbersProbabilities) {
     int j = 0;

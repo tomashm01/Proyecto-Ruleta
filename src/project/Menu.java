@@ -28,8 +28,11 @@ public class Menu {
   }
 
   /**
+   * This function check if the input option is correct ant returns it
+   * 
    * @return chosen Option
    */
+  
   private int selectOption() {
     Scanner s = new Scanner(System.in);
     int chosenOption;
@@ -53,6 +56,7 @@ public class Menu {
    * This function print menu and return given option
    * @return int
    */
+  
   public int manage() {
     showMenu();
     return selectOption();

@@ -38,7 +38,7 @@ public class Main {
 
       switch (option) {
 
-        case 1:
+        case 1://Bet to red or black
           int moneyBetted = insertAmount(roundMovement);
           String red = Bet.POSSIBLE_BET_TYPES[0][0];
           String black = Bet.POSSIBLE_BET_TYPES[0][1];
@@ -46,7 +46,8 @@ public class Main {
           roundMovement.addBet(colorChoice, moneyBetted);
           betCompleted = true;
           break;
-        case 2:
+          
+        case 2://Bet to even or odd
           moneyBetted = insertAmount(roundMovement);
           String even = Bet.POSSIBLE_BET_TYPES[1][0];
           String odd = Bet.POSSIBLE_BET_TYPES[1][1];
@@ -54,7 +55,8 @@ public class Main {
           roundMovement.addBet(evenOddChoice, moneyBetted);
           betCompleted = true;
           break;
-        case 3:
+          
+        case 3://Bet to low(1-18) or high(19-36)
           moneyBetted = insertAmount(roundMovement);
           String high = Bet.POSSIBLE_BET_TYPES[2][0];
           String low = Bet.POSSIBLE_BET_TYPES[2][1];
@@ -62,13 +64,15 @@ public class Main {
           roundMovement.addBet(highLowChoice, moneyBetted);
           betCompleted = true;
           break;
-        case 4:
+          
+        case 4://Spin the roulette
           Roulette.spunRoulette(roundMovement);
           roundMovement = new Move();
           spunRoulette = true;
           betCompleted = false;
           break;
-        case 5:
+          
+        case 5://Print the stadistics
           if (spunRoulette) {
             Roulette.calculateStatistics();
             HUD.printStatistics();
@@ -77,20 +81,23 @@ public class Main {
           } else
             System.out.println("No statistics generated");
           break;
-        case 6:
+          
+        case 6://Restar the game
           Player.restartGame();
           break;
-        case 7:
+          
+        case 7://End of the game
           System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
-        default:
+          
+        default://Errors control
           System.err.println(showAsError("Error in the input option"));
       }
       clearScreen();
     } while (option != 7);
   }
 
-  /*
+  /**
    * This function clean the terminal screen
    */
 
@@ -98,8 +105,8 @@ public class Main {
     System.out.print("\033[H\033[2J");
     System.out.flush();
   }
-
-  /*
+  
+  /**
    * return true if custom dni is set successfully to player.
    * 
    * @return boolean
@@ -128,18 +135,26 @@ public class Main {
     return false;
   }
 
-  /*
+  /**
    * This function set a random dni
    */
+  
   private static void setRandomDni() {
     System.out.println(ConsoleColors.RED);
     System.out.printf("%107s", "We have created a DNI for you.");
     Player.setDni(Player.generateRandomDni());
   }
 
-  /*
+  /**
    * This function request a type of bet to the player, valide this type and returns it
+   * 
+   * @param String
+   * @param String
+   * 
+   * @return String
+   * 
    */
+  
   private static String insertChoice(String possibleChoice1, String possibleChoice2) {
     Scanner s = new Scanner(System.in);
     String choice;
@@ -161,18 +176,23 @@ public class Main {
     return choice;
   }
 
-  /*
+  /**
    * Print roulette menu and return a chosen option
    */
+  
   static int rouletteMenu() {
     Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
         "Higher or lower bet", "Spin roulette", "Stadistics", "Reset Game");
     return roulette.manage();
   }
 
-  /*
+  /**
    * This function request a amount of money for the bet
+   * 
+   * @param Move
+   * 
    */
+  
   static int insertAmount(Move roundMovement) {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
@@ -193,11 +213,13 @@ public class Main {
     return moneyBetted;
   }
 
-  /*
+  /**
    * This function validate if the input fact is a number
    * 
    * @return int
+   * 
    */
+  
   public static int validateNumber() {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
@@ -219,13 +241,15 @@ public class Main {
     return numToValidate;
   }
 
-  /*
+  /**
    * This function show a message as error in console
    * 
    * @param error
    * 
    * @return error coloured
+   * 
    */
+  
   private static String showAsError(String error) {
     return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
   }
