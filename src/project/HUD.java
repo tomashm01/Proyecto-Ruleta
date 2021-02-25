@@ -1,7 +1,7 @@
 package project;
+
 /**
- * Authors: Jesús Díaz, Tomás Hidalgo
- * Auxiliary class to print data at Main class.
+ * Authors: Jesús Díaz, Tomás Hidalgo Auxiliary class to print data at Main class.
  */
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -130,6 +130,10 @@ public class HUD {
         oneDigitPrint(someWinningNumber);
       }
 
+    } else {
+      System.out.print(
+          ConsoleColors.GREEN + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
+      System.out.print("\b");
     }
   }
 
@@ -141,8 +145,15 @@ public class HUD {
    */
 
   private static void oneDigitPrint(WinningNumber someWinningNumber) {
-    System.out.print(
-        ConsoleColors.RED + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
+    if (someWinningNumber.getColor().equals("RED")) {
+      System.out.print(
+          ConsoleColors.RED + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
+
+    } else {
+      System.out.print(
+          ConsoleColors.BLACK + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
+
+    }
     System.out.print("\b");
   }
 
@@ -186,8 +197,12 @@ public class HUD {
 
   public static void printWinningNumberResults() {
     System.out.printf("\n%41s", showAsCyan("Results:"));
-    System.out.println(ConsoleColors.WHITE_BACKGROUND_CUSTOM + getLastWinningNumber().getResults()
-        + ConsoleColors.RESET);
+    if (getLastWinningNumber().getNumber() == 0) {
+      System.out.println("You lost everything");
+    } else {
+      System.out.println(ConsoleColors.WHITE_BACKGROUND_CUSTOM + getLastWinningNumber().getResults()
+          + ConsoleColors.RESET);
+    }
   }
 
   /**

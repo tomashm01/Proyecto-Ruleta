@@ -1,7 +1,7 @@
 package project;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
- * Random number between 0 - 36, this number has his own properties like color, Even or Odd, High or Low1
+ * Random number between 0 - 36, this number has his own properties like color, Even or Odd, High or Low
  */
 import java.util.List;
 import java.util.stream.IntStream;
@@ -48,7 +48,7 @@ public class WinningNumber {
   }
   
   public void setRandomNumber() {
-    this.winningNumber = (int) (Math.random() * (36) + 1);
+    this.winningNumber = (int) (Math.random() * (36));
   }
 
   public void setColor() {
