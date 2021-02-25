@@ -1,5 +1,8 @@
 package project;
-
+/**
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Colors we are able to use.
+ */
 public class ConsoleColors {
   // Reset
   public static final String RESET = "\033[0m";  // Text Reset
@@ -33,5 +36,12 @@ public class ConsoleColors {
   public static final String PURPLE_UNDERLINED = "\033[4;35m"; // PURPLE
   public static final String CYAN_UNDERLINED = "\033[4;36m";   // CYAN
   public static final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
+  
+  //Custom
+  public static final String CYAN_BACKGROUND_CUSTOM = "\033[46m";   // CYAN
+  public static final String CYAN_CUSTOM = "\033[38;5;87m";   // CYAN
+  public static final String BOLD_CUSTOM = "\033[1m";
+  public static final String WHITE_BACKGROUND_CUSTOM = "\033[30;48;5;255m";
+  public static final String PINK_BACKGROUND_CUSTOM = "\033[30;48;5;225m";
   
 }

@@ -1,5 +1,8 @@
 package project;
-
+/**
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Data from user. Dni, money.
+ */
 public class Player {
   private static int INITIAL_MONEY = 500;
   

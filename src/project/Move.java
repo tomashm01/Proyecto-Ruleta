@@ -1,5 +1,9 @@
 package project;
-
+/**
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Set of Bets before Roulette is spun.
+ * We also stash all bets and balances made previously.
+ */
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

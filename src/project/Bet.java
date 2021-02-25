@@ -1,5 +1,8 @@
 package project;
-
+/**
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Auxiliary class to manage every bet for each Move
+ */
 public class Bet {
   //Bets can be 3 specific types (black or red) (even or odd) (high or low)
   public static final String[][] POSSIBLE_BET_TYPES = {{"BLACK","RED"},{"EVEN","ODD"},{"HIGH","LOW"}};

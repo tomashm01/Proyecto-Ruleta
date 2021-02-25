@@ -1,5 +1,8 @@
 package project;
-
+/**
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Random number between 0 - 36, this number has his own properties like color, Even or Odd, High or Low1
+ */
 import java.util.List;
 import java.util.stream.IntStream;
 

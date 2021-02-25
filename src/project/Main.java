@@ -1,10 +1,9 @@
 package project;
-
 /**
- * javac -d . Main.java Menu.java Roulette.java Move.java WinningNumber.java HUD.java Player.java
-    ConsoleColors.java NoMoneyException.java Bet.java divideByZeroException.java
- * 
- * java project.Main
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Where user data is received, and finally, processed.
+ * Making our roulette interactive.
+ * Using a Menu.
  */
 import java.util.Scanner;
 
@@ -20,24 +19,24 @@ public class Main {
     Move roundMovement = new Move();
 
     // User has 3 attemps to input a valid dni or a random dni will be set
-    
-    clearScreen();
+
+    HUD.clearScreen();
     if (!dniExists()) {
       setRandomDni();
     }
     do {
-      
+
       HUD.printPlayerInfo();// Print money and DNI
+
       if (betCompleted) {
         HUD.printBetsInfo(roundMovement); // Print currentBets and money at Stake
       }
-   
 
       option = rouletteMenu();
 
       switch (option) {
 
-        case 1://Bet to red or black
+        case 1:// Bet to red or black
           int moneyBetted = insertAmount(roundMovement);
           String red = Bet.POSSIBLE_BET_TYPES[0][0];
           String black = Bet.POSSIBLE_BET_TYPES[0][1];
@@ -45,8 +44,8 @@ public class Main {
           roundMovement.addBet(colorChoice, moneyBetted);
           betCompleted = true;
           break;
-          
-        case 2://Bet to even or odd
+
+        case 2:// Bet to even or odd
           moneyBetted = insertAmount(roundMovement);
           String even = Bet.POSSIBLE_BET_TYPES[1][0];
           String odd = Bet.POSSIBLE_BET_TYPES[1][1];
@@ -54,8 +53,8 @@ public class Main {
           roundMovement.addBet(evenOddChoice, moneyBetted);
           betCompleted = true;
           break;
-          
-        case 3://Bet to low(1-18) or high(19-36)
+
+        case 3:// Bet to low(1-18) or high(19-36)
           moneyBetted = insertAmount(roundMovement);
           String high = Bet.POSSIBLE_BET_TYPES[2][0];
           String low = Bet.POSSIBLE_BET_TYPES[2][1];
@@ -63,8 +62,8 @@ public class Main {
           roundMovement.addBet(highLowChoice, moneyBetted);
           betCompleted = true;
           break;
-          
-        case 4://Spin the roulette
+
+        case 4:// Spin the roulette
           Roulette.spunRoulette(roundMovement);
           HUD.printRouletteResults();
           roundMovement = new Move();
@@ -72,45 +71,41 @@ public class Main {
           betCompleted = false;
           printEnter(s);
           break;
-          
-        case 5://Print the stadistics
+
+        case 5:// Print the stadistics
           if (spunRoulette) {
             Roulette.calculateStatistics();
             HUD.printStatistics();
             printEnter(s);
-          } else
-            System.out.println("No statistics generated");
+          } else {
+            System.out.println(HUD.showAsError("No statistics generated"));
+            printEnter(s);
+          }
           break;
-          
-        case 6://Restar the game
+
+        case 6:// Restar the game
           Player.restartGame();
+          System.out.println(HUD.showAsError("Money has been reset"));
+          printEnter(s);
           break;
-          
-        case 7://End of the game
+
+        case 7:// End of the game
           System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
-          
-        default://Errors control
-          System.err.println(showAsError("Error in the input option"));
+
+        default:// Errors control
+          System.err.println(HUD.showAsError("Error in the input option"));
+          printEnter(s);
       }
-      clearScreen();
+      HUD.clearScreen();
     } while (option != 7);
   }
 
   private static void printEnter(Scanner s) {
-    System.out.print(ConsoleColors.PURPLE+"Press Enter to continue"+ConsoleColors.PURPLE);
+    System.out.print(ConsoleColors.CYAN_CUSTOM + "Press Enter to continue" + ConsoleColors.RESET);
     s.nextLine();
   }
 
-  /**
-   * This function clean the terminal screen
-   */
-
-  public static void clearScreen() {
-    System.out.print("\033[H\033[2J");
-    System.out.flush();
-  }
-  
   /**
    * return true if custom dni is set successfully to player.
    * 
@@ -143,10 +138,10 @@ public class Main {
   /**
    * This function set a random dni
    */
-  
+
   private static void setRandomDni() {
     System.out.println(ConsoleColors.RED);
-    System.out.printf("%107s", "We have created a DNI for you.");
+    System.out.printf("%90s", "We have created a DNI for you.");
     Player.setDni(Player.generateRandomDni());
   }
 
@@ -159,7 +154,7 @@ public class Main {
    * @return String
    * 
    */
-  
+
   private static String insertChoice(String possibleChoice1, String possibleChoice2) {
     Scanner s = new Scanner(System.in);
     String choice;
@@ -172,8 +167,8 @@ public class Main {
 
       if (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2)) {
 
-        System.out.printf(showAsError("%s %s %s %s\n"), "\nPlease insert", possibleChoice1, " OR ",
-            possibleChoice2);
+        System.out.printf(HUD.showAsError("%s %s %s %s\n"), "\nPlease insert", possibleChoice1,
+            " OR ", possibleChoice2);
       }
 
     } while (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2));
@@ -183,12 +178,23 @@ public class Main {
 
   /**
    * Print roulette menu and return a chosen option
+   * We think Menu class is generic, and it shouldnt manage colours
    */
-  
+
   static int rouletteMenu() {
-    Menu roulette = new Menu("--ROULETTE MENU--", "Color bet", "Even or odd bet",
-        "Higher or lower bet", "Spin roulette", "Stadistics", "Reset Game");
-    return roulette.manage();
+    Menu roulette = new Menu(ConsoleColors.CYAN_CUSTOM + "--ROULETTE MENU--" + ConsoleColors.RESET,
+        ConsoleColors.GREEN + "Color bet" + ConsoleColors.RESET,
+        ConsoleColors.GREEN + "Even or odd bet" + ConsoleColors.RESET,
+        ConsoleColors.GREEN + "Higher or lower bet" + ConsoleColors.RESET,
+        ConsoleColors.GREEN + "Spin roulette" + ConsoleColors.RESET,
+        ConsoleColors.GREEN + "Statistics" + ConsoleColors.RESET,
+        ConsoleColors.GREEN + "Reset Game" + ConsoleColors.RESET,
+        ConsoleColors.RED + "End game" + ConsoleColors.RESET) ;
+    roulette.showMenu();
+    int option = roulette.selectOption(ConsoleColors.CYAN_CUSTOM + "\n\nChoose an option");
+    System.out.println(ConsoleColors.RESET);
+    return option;
+   
   }
 
   /**
@@ -197,21 +203,20 @@ public class Main {
    * @param Move
    * 
    */
-  
+
   static int insertAmount(Move roundMovement) {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
     int moneyBetted = 0;
 
     do {
-
-      System.out.print("Please insert the amount to bet: ");
+      System.out.print(ConsoleColors.YELLOW_BOLD + "Please insert the amount to bet: ");
       moneyBetted = validateNumber(); // Checks if its a number
       try {
         roundMovement.betMoney(moneyBetted); // Checks if you have enough money or input is negative
         invalid = false;
       } catch (NoMoneyException | NegativeException noMoney) {
-        System.err.println(noMoney);
+        System.err.println(HUD.showAsError(noMoney.toString()));
       }
 
     } while (invalid);
@@ -224,7 +229,7 @@ public class Main {
    * @return int
    * 
    */
-  
+
   public static int validateNumber() {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
@@ -238,7 +243,7 @@ public class Main {
         // Sets the condition to false to break the loop
         invalid = false;
       } else {
-        System.err.print(showAsError("Invalid input.\nInsert number again:"));
+        System.err.print(HUD.showAsError("Invalid input.\nInsert number again:"));
         // Advances the scanner to prevent input errors
         s.nextLine();
       }
@@ -246,16 +251,5 @@ public class Main {
     return numToValidate;
   }
 
-  /**
-   * This function show a message as error in console
-   * 
-   * @param error
-   * 
-   * @return error coloured
-   * 
-   */
-  
-  private static String showAsError(String error) {
-    return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
-  }
+
 }

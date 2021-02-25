@@ -1,5 +1,8 @@
 package project;
-
+/**
+ * Authors: Jesús Díaz, Tomás Hidalgo
+ * Where we calculate benefits from Roulette to set money at user according to it Move.
+ */
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +25,40 @@ public class Roulette {
   private static void setAllWinningNumbers(WinningNumber lastWinningNumber) {
     allWinningNumbers.add(lastWinningNumber);
   }
+  
+  /**
+   * This function spin the roulette
+   * 
+   * @param playerMove
+   */
+  
+  public static void spunRoulette(Move playerMove) {
+    // Create a random number
+    WinningNumber randomWinningNumber = new WinningNumber();
+    playerMove.setFinalBalance(randomWinningNumber);
+    Player.setFinalMoney(playerMove);
+    setAllWinningNumbers(randomWinningNumber);
+  }
 
+  /**
+   * This function calculate the profit int this roll for the player
+   * 
+   * @param playerMove
+   * @param myWinningNumber
+   * 
+   * @return int
+   * 
+   */
+  public static int calculateProfit(Move playerMove, WinningNumber myWinningNumber) {
+
+    ArrayList<Bet> successfulBets = getSuccessfulBets(playerMove, myWinningNumber);
+
+    setAllWonBets(successfulBets); // Store every successfulBet
+
+    return successfulBets.stream().mapToInt(winningBets -> winningBets.getAmount() * 2).sum();
+    // Return profits from successfulBets
+
+  }
   private static ArrayList<Double> getProbabilities() {
     // Create Atomic Integers to count inside a lambda
     AtomicInteger redCount = new AtomicInteger();
@@ -62,40 +98,6 @@ public class Roulette {
 
   public static HashMap<String, String> getStatistics() {
     return statistics;
-  }
-  
-  /**
-   * This function spin the roulette
-   * 
-   * @param playerMove
-   */
-  
-  public static void spunRoulette(Move playerMove) {
-    // Create a random number
-    WinningNumber randomWinningNumber = new WinningNumber();
-    playerMove.setFinalBalance(randomWinningNumber);
-    Player.setFinalMoney(playerMove);
-    setAllWinningNumbers(randomWinningNumber);
-  }
-
-  /**
-   * This function calculate the profit int this roll for the player
-   * 
-   * @param playerMove
-   * @param myWinningNumber
-   * 
-   * @return int
-   * 
-   */
-  public static int calculateProfit(Move playerMove, WinningNumber myWinningNumber) {
-
-    ArrayList<Bet> successfulBets = getSuccessfulBets(playerMove, myWinningNumber);
-
-    setAllWonBets(successfulBets); // Store every successfulBet
-
-    return successfulBets.stream().mapToInt(winningBets -> winningBets.getAmount() * 2).sum();
-    // Return profits from successfulBets
-
   }
   /**
    * This function put the bets that the user win in the ArrayList Bet and returns it
