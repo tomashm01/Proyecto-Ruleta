@@ -6,6 +6,7 @@ package project;
  */
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,8 +18,7 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   // balances calculated previously
   private static List<Integer> allBalances = new ArrayList<>();
 
-  private List<Bet> currentBets = new ArrayList<>();
-
+  private HashMap<BetTypes, Integer> currentBets = new HashMap<BetTypes, Integer>();
   private int balance; // Money calculated after roulette spun.
   private int moneyAtStake;
 
@@ -29,24 +29,25 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   
   public void setMoneyAtStake() {
     //Money at stake is money you have on your current Bets (before Roulette is spun)
-    this.moneyAtStake = currentBets.stream().mapToInt(bets -> bets.getAmount()).sum();
+    this.moneyAtStake = currentBets.values().stream().reduce(0, Integer::sum);
   }
   
   public int getMoneyAtStake() {
     return moneyAtStake;
   }
   
-  public void setAllBets() {
-    allBets.add((ArrayList<Bet>) currentBets);
-  }
+//  public void setAllBets() {
+//    allBets.add((ArrayList<Bet>) currentBets);
+//  }
 
-  public List<Bet> getCurrentBets() {
-    return currentBets;
+  public HashMap<BetTypes, Integer> getCurrentBets() {
+    return (HashMap<BetTypes, Integer>) currentBets;
   }
 
   public void setFinalBalance(WinningNumber newWinningNumber) {
+
     this.balance = Roulette.calculateProfit(this, newWinningNumber) - moneyAtStake;
-    setAllBets();
+//    setAllBets();
     setAllBalances();
   }
 
@@ -63,44 +64,21 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   }
 
   /**
-   * This function is used when we need to overwrite a bet of the same type (Example: Red and Black are the same Type) Firstly
-   * we remove a previous bet if his type is the same as the new bet Finally we add the new bet
+   * Add bet
    * 
    * @param String
    * @param int
    * 
    */
   
-  public void addBet(String choice, int moneyBetted) {
-    removeBetInCurrentBets(choice);
-    currentBets.add(new Bet(choice, moneyBetted)); // Add the new bet
-    setMoneyAtStake();
-  }
-  
-  /**
-   * This function allows to remove the currents bets 
-   * 
-   * @param String
-   * 
-   */
-  
-  private void removeBetInCurrentBets(String choice) {
-    // We need an iterator to remove matching bets from currentBets
-    Iterator<Bet> iterator = currentBets.iterator(); 
-
-    while (iterator.hasNext()) {
-      Bet currentBet = (Bet) iterator.next(); // Get bets from currentBets to compare
-      for (String[] betType : Arrays.asList(Bet.POSSIBLE_BET_TYPES)) {
-        // Loop each bet Type(Ex:[RED,BLACK],[EVEN,ODD]...)
-        if (Arrays.asList(betType).contains(currentBet.getType())
-            && Arrays.asList(betType).contains(choice)) {
-          // If [Red,Black] was on currentBets and new bet(choice)
-          iterator.remove();
-          // Remove it from currentBets
-        }
-      }
+  public void addBet(BetTypes choice, int moneyBetted) {
+    
+    if (this.currentBets.containsKey(choice)){
+      moneyBetted+= currentBets.get(choice);
     }
-
+    
+    this.currentBets.put(choice, moneyBetted); // Add the new bet      
+    setMoneyAtStake();
   }
 
   /**
@@ -122,6 +100,7 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
       throw new NoMoneyException("You have not enough money to bet for this.");
     }
   }
+  
 }
 
 

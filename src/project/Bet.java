@@ -1,22 +1,29 @@
 package project;
+
+import java.util.EnumSet;
+
+enum BetTypes 
+{ 
+  RED, BLACK, EVEN, ODD, HIGH, LOW, DOZEN1, DOZEN2, DOZEN3, LINE1, LINE2, LINE3;  
+}; 
+
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Auxiliary class to manage every bet for each Move
  */
 public class Bet {
   //Bets can be 3 specific types (black or red) (even or odd) (high or low)
-  public static final String[][] POSSIBLE_BET_TYPES = {{"BLACK","RED"},{"EVEN","ODD"},{"HIGH","LOW"}};
-  
+
   private Integer amount;
-  private String type;
+  private BetTypes type;
   
   //Constructors
-  public Bet(String type, Integer amount)  { 
+  public Bet(BetTypes type, Integer amount)  { 
     this.amount = amount;
     this.type = type;
   }
   
-  public Bet(String type) {
+  public Bet(BetTypes type) {
     this.type = type;
   }
 
@@ -25,17 +32,17 @@ public class Bet {
     return amount;
   }
 
-  public String getType() {
+  public BetTypes getType() {
     return type;
   }
 
   //Setters
-  public void setType(String type) {
+  public void setType(BetTypes type) {
     this.type = type;
   }
 
   public String toString() {
-    return this.getType();
+    return this.getType().toString();
   }
 
   @Override

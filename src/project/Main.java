@@ -1,4 +1,7 @@
 package project;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Where user data is received, and finally, processed.
@@ -17,7 +20,14 @@ public class Main {
     boolean betCompleted = false;
     boolean spunRoulette = false;
     Move roundMovement = new Move();
-
+ 
+    EnumSet<BetTypes> redBlackBet,evenOddBet,highLowBet, dozenBet,lineBet;
+    redBlackBet = EnumSet.of(BetTypes.RED,BetTypes.BLACK);
+    evenOddBet = EnumSet.of(BetTypes.EVEN,BetTypes.ODD);
+    highLowBet = EnumSet.of(BetTypes.HIGH,BetTypes.LOW);
+    dozenBet = EnumSet.range(BetTypes.DOZEN1, BetTypes.DOZEN3);
+    lineBet = EnumSet.range(BetTypes.LINE1, BetTypes.LINE3);
+ 
     // User has 3 attemps to input a valid dni or a random dni will be set
 
     HUD.clearScreen();
@@ -38,32 +48,47 @@ public class Main {
 
         case 1:// Bet to red or black
           int moneyBetted = insertAmount(roundMovement);
-          String red = Bet.POSSIBLE_BET_TYPES[0][0];
-          String black = Bet.POSSIBLE_BET_TYPES[0][1];
-          String colorChoice = insertChoice(red, black);
+
+          BetTypes colorChoice = insertChoice(redBlackBet);
           roundMovement.addBet(colorChoice, moneyBetted);
           betCompleted = true;
           break;
 
         case 2:// Bet to even or odd
           moneyBetted = insertAmount(roundMovement);
-          String even = Bet.POSSIBLE_BET_TYPES[1][0];
-          String odd = Bet.POSSIBLE_BET_TYPES[1][1];
-          String evenOddChoice = insertChoice(even, odd);
+   
+          BetTypes evenOddChoice = insertChoice(evenOddBet);
           roundMovement.addBet(evenOddChoice, moneyBetted);
           betCompleted = true;
           break;
 
         case 3:// Bet to low(1-18) or high(19-36)
           moneyBetted = insertAmount(roundMovement);
-          String high = Bet.POSSIBLE_BET_TYPES[2][0];
-          String low = Bet.POSSIBLE_BET_TYPES[2][1];
-          String highLowChoice = insertChoice(high, low);
+          
+          BetTypes highLowChoice = insertChoice(highLowBet);
           roundMovement.addBet(highLowChoice, moneyBetted);
           betCompleted = true;
           break;
 
-        case 4:// Spin the roulette
+        case 4:// Bet to Dozen (1-12,13-24,24-36)
+          moneyBetted = insertAmount(roundMovement);
+          BetTypes DozenChoice = insertChoice(dozenBet);
+          roundMovement.addBet(DozenChoice, moneyBetted);
+          betCompleted = true;
+          break;
+
+        case 5:// Bet to Line (1,3..34) (2,5...35) (3,6...36)
+          moneyBetted = insertAmount(roundMovement);
+          BetTypes lineChoice = insertChoice(lineBet);          
+          roundMovement.addBet(lineChoice, moneyBetted);
+          betCompleted = true;
+          break;
+       
+        case 6:// Bet to Number
+          
+          break;
+       
+        case 7:// Spin the roulette
           Roulette.spunRoulette(roundMovement);
           HUD.printRouletteResults();
           roundMovement = new Move();
@@ -71,34 +96,40 @@ public class Main {
           betCompleted = false;
           printEnter(s);
           break;
-
-        case 5:// Print the stadistics
+          
+        case 8:// Clear all Bets
+          roundMovement = new Move();
+          betCompleted = false;
+          break;
+          
+        case 9:// Print the stadistics
           if (spunRoulette) {
-            Roulette.calculateStatistics();
+//            Roulette.calculateStatistics();
             HUD.printStatistics();
             printEnter(s);
           } else {
-            System.out.println(HUD.showAsError("No statistics generated"));
+            System.out.println(HUD.showAsRed("No statistics generated"));
             printEnter(s);
           }
           break;
-
-        case 6:// Restar the game
+          
+        case 10:// Restart game
           Player.restartGame();
-          System.out.println(HUD.showAsError("Money has been reset"));
+          System.out.println(HUD.showAsRed("Money has been reset"));
           printEnter(s);
           break;
-
-        case 7:// End of the game
+          
+        case 11:// End game
           System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
-
+          
         default:// Errors control
-          System.err.println(HUD.showAsError("Error in the input option"));
+          System.err.println(HUD.showAsRed("Error in the input option"));
           printEnter(s);
+          
       }
       HUD.clearScreen();
-    } while (option != 7);
+    } while (option != 11);
   }
 
   private static void printEnter(Scanner s) {
@@ -155,25 +186,29 @@ public class Main {
    * 
    */
 
-  private static String insertChoice(String possibleChoice1, String possibleChoice2) {
+  public static BetTypes insertChoice(EnumSet<BetTypes> betType) {
     Scanner s = new Scanner(System.in);
     String choice;
+    System.out.print("Input the type " + betType + ":");
+    choice = s.nextLine().toUpperCase();
 
     do {
-
-      HUD.printInputType(possibleChoice1, possibleChoice2);
-
-      choice = (s.nextLine().toUpperCase());
-
-      if (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2)) {
-
-        System.out.printf(HUD.showAsError("%s %s %s %s\n"), "\nPlease insert", possibleChoice1,
-            " OR ", possibleChoice2);
+      if (!betTypeConstainsChoice(betType, choice)) {
+        System.out.printf(HUD.showAsRed("%s"), "\nPlease insert" + betType + ":");
+        choice = s.nextLine().toUpperCase();
       }
-
-    } while (!choice.equals(possibleChoice1) && !choice.equals(possibleChoice2));
-
-    return choice;
+    } while (!betTypeConstainsChoice(betType, choice));
+    return BetTypes.valueOf(choice);
+  }
+  
+  /**
+   * Check if String is in EnumSet 
+   * E.g: EnumSet colors: RED,BLACK 
+   * Get RED.toString() and compare with choice
+   */
+  private static boolean betTypeConstainsChoice(EnumSet<BetTypes> betType, String choice) {
+    //
+    return betType.stream().anyMatch(enumType -> enumType.toString().equals(choice));
   }
 
   /**
@@ -183,12 +218,16 @@ public class Main {
 
   static int rouletteMenu() {
     Menu roulette = new Menu(ConsoleColors.CYAN_CUSTOM + "--ROULETTE MENU--" + ConsoleColors.RESET,
-        ConsoleColors.GREEN + "Color bet" + ConsoleColors.RESET,
-        ConsoleColors.GREEN + "Even or odd bet" + ConsoleColors.RESET,
-        ConsoleColors.GREEN + "Higher or lower bet" + ConsoleColors.RESET,
-        ConsoleColors.GREEN + "Spin roulette" + ConsoleColors.RESET,
-        ConsoleColors.GREEN + "Statistics" + ConsoleColors.RESET,
-        ConsoleColors.GREEN + "Reset Game" + ConsoleColors.RESET,
+        HUD.showAsGreen("Color bet"),
+        HUD.showAsGreen("Even or odd bet"),
+        HUD.showAsGreen("Higher or lower bet"),
+        HUD.showAsGreen("Dozen bet"),
+        HUD.showAsGreen("Line bet"),
+        HUD.showAsGreen("Number bet"),
+        HUD.showAsGreen("Spin roulette"),
+        HUD.showAsGreen("Clear bets"),
+        HUD.showAsGreen("Statistics"),
+        HUD.showAsGreen("Reset Game"),
         ConsoleColors.RED + "End game" + ConsoleColors.RESET) ;
     roulette.showMenu();
     int option = roulette.selectOption(ConsoleColors.CYAN_CUSTOM + "\n\nChoose an option");
@@ -196,6 +235,8 @@ public class Main {
     return option;
    
   }
+
+  
 
   /**
    * This function request a amount of money for the bet
@@ -216,7 +257,7 @@ public class Main {
         roundMovement.betMoney(moneyBetted); // Checks if you have enough money or input is negative
         invalid = false;
       } catch (NoMoneyException | NegativeException noMoney) {
-        System.err.println(HUD.showAsError(noMoney.toString()));
+        System.err.println(HUD.showAsRed(noMoney.toString()));
       }
 
     } while (invalid);
@@ -243,7 +284,7 @@ public class Main {
         // Sets the condition to false to break the loop
         invalid = false;
       } else {
-        System.err.print(HUD.showAsError("Invalid input.\nInsert number again:"));
+        System.err.print(HUD.showAsRed("Invalid input.\nInsert number again:"));
         // Advances the scanner to prevent input errors
         s.nextLine();
       }

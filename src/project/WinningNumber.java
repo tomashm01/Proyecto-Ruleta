@@ -9,76 +9,97 @@ import java.util.stream.IntStream;
 public class WinningNumber {
   //A winning number has his own properties itself (He is even or odd, high or low, red or black)
   private int winningNumber;
-  private String color; //It is called color instead of redBlack because maybe he is green
-  private String EvenOdd;
-  private String HighLow; //High: number is > 19, low: <= 18
+  private BetTypes redBlack;
+  private BetTypes evenOdd;
+  private BetTypes highLow; //High: number is > 19, low: <= 18
+  private BetTypes dozen; //D1 : 1-12, D2 : 13-24, D3 : 25-36
+  private BetTypes line; //L1 : 1,4,7..34 , L2 : 2,5,8...35 , L3 : 3,6,9...36
+  
 
   //Constructor
   public WinningNumber() {
     setRandomNumber();
     if (this.winningNumber == 0) {
-      this.color = "GREEN";
-      this.EvenOdd = "NULL";
-      this.HighLow = "NULL";
+      this.redBlack = null;
+      this.evenOdd = null;
+      this.highLow = null;
     } else {
       setColor();
       setEvenOdd();
       setHighLow();
+      setDozen();
+      setLine();
     }
   }
+  
   //Getters and Setters
-  public List<String> getResults() {
-    return List.of(this.color,this.EvenOdd,this.HighLow);
+  public List<BetTypes> getResults() {
+    return List.of(this.redBlack,this.evenOdd,this.highLow,this.dozen,this.line);
   }
-
-  public String getColor() {
-    return color;
-  }
-  public void setColor(String color) {
-    this.color = color;
+  public BetTypes getColor() {
+    return redBlack;
   }
   public int getNumber() {
     return winningNumber;
   }
-  public String getEvenOdd() {
-    return EvenOdd;
+  public BetTypes getEvenOdd() {
+    return evenOdd;
   }
-  public String getHighLow() {
-    return HighLow;
+  public BetTypes dozen() {
+    return dozen;
+  }
+  public BetTypes line() {
+    return line;
+  }
+  public BetTypes getHighLow() {
+    return highLow;
   }
   
-  public void setRandomNumber() {
+  private void setRandomNumber() {
     this.winningNumber = (int) (Math.random() * (36));
   }
 
-  public void setColor() {
+  private void setColor() {
+    if (isRed()) {
+      this.redBlack = BetTypes.RED;
+    } else {
+      this.redBlack = BetTypes.BLACK;
+    }    
+  }
 
+  public boolean isRed() {
     int reds[] = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
     //Loop reds array, check if this.number match with some red.
-    boolean isRed = IntStream.of(reds).anyMatch(redNumber -> redNumber == this.winningNumber); 
-
-    if (isRed) {
-      this.color = "RED";
-    } else {
-      this.color = "BLACK";
-    }
-
+    boolean isRed = IntStream.of(reds).anyMatch(redNumber -> redNumber == this.winningNumber);
+    return isRed;
   }
   
-  public void setEvenOdd() {
+  private void setEvenOdd() {
     if (this.winningNumber % 2 == 0) {
-      this.EvenOdd = "EVEN";
+      this.evenOdd = BetTypes.EVEN;
     } else {
-      this.EvenOdd = "ODD";
+      this.evenOdd = BetTypes.ODD;
     }
   }
   
-  public void setHighLow() {
+  private void setHighLow() {
     if (this.winningNumber < 19) {
-      this.HighLow = "LOW";
+      this.highLow = BetTypes.LOW;
     } else {
-      this.HighLow = "HIGH";
+      this.highLow = BetTypes.HIGH;
     } 
+  }
+  
+  private void setDozen() {
+    this.dozen =  BetTypes.valueOf("DOZEN" + ( (int) this.winningNumber/12 + 1));    
+  }
+  
+  private void setLine() {
+    if (this.winningNumber % 3 == 0) {
+      this.line = BetTypes.valueOf("LINE" + 3);
+    }else {
+      this.line = BetTypes.valueOf("LINE" + this.winningNumber % 3);
+    }
   }
   
 }

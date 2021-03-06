@@ -67,8 +67,8 @@ public class HUD {
   public static void printRouletteResults() {
     printWinningNumber();
     printWinningNumberResults();
-    printBets();
-    printSuccessfulBet();
+    //printBets();
+    //printSuccessfulBet();
     printBalanceRoll();
   }
 
@@ -87,9 +87,9 @@ public class HUD {
     List<WinningNumber> reverse = new ArrayList<WinningNumber>(Roulette.getAllWinningNumbers());
     Collections.reverse(reverse);
     if (reverse.size() > 10) {
-      reverse.removeIf(bola -> reverse.indexOf(bola) > 10);
+      reverse.removeIf(ball -> reverse.indexOf(ball) > 10);
     }
-    reverse.forEach(bola -> System.out.print(bola.getNumber() + " "));
+    reverse.forEach(ball -> System.out.print(ball.getNumber() + " "));
   }
 
   private static String showAsCyan(String message) {
@@ -113,7 +113,7 @@ public class HUD {
 
   private static void printNumberWithColors(WinningNumber someWinningNumber) {
 
-    if (someWinningNumber.getColor().equals("RED")) {
+    if (someWinningNumber.isRed()) {
       System.out.print(ConsoleColors.RESET);
       if (twoDigits(someWinningNumber)) {
         System.out.print(
@@ -121,20 +121,19 @@ public class HUD {
       } else {
         oneDigitPrint(someWinningNumber);
       }
-
-    } else if (someWinningNumber.getColor().equals("BLACK")) {
+    } else if (someWinningNumber.getNumber() == 0) {
+      System.out.print(
+          ConsoleColors.GREEN + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
+      System.out.print("\b");
+    } else {
       if (twoDigits(someWinningNumber)) {
         System.out.print(ConsoleColors.BLACK_BOLD + "|" + someWinningNumber.getNumber() + "|"
             + ConsoleColors.RESET);
       } else {
         oneDigitPrint(someWinningNumber);
       }
-
-    } else {
-      System.out.print(
-          ConsoleColors.GREEN + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
-      System.out.print("\b");
     }
+    
   }
 
   /**
@@ -145,7 +144,7 @@ public class HUD {
    */
 
   private static void oneDigitPrint(WinningNumber someWinningNumber) {
-    if (someWinningNumber.getColor().equals("RED")) {
+    if (someWinningNumber.getColor().equals(BetTypes.RED)) {
       System.out.print(
           ConsoleColors.RED + "|" + someWinningNumber.getNumber() + " |" + ConsoleColors.RESET);
 
@@ -275,7 +274,7 @@ public class HUD {
   }
 
   /**
-   * This function show a message as error in console
+   * This function show a message as red in console
    * 
    * @param error
    * 
@@ -283,10 +282,13 @@ public class HUD {
    * 
    */
 
-  public static String showAsError(String error) {
-    return ConsoleColors.RESET + ConsoleColors.RED + error + ConsoleColors.RESET;
+  public static String showAsRed(String message) {
+    return ConsoleColors.RESET + ConsoleColors.RED + message + ConsoleColors.RESET;
   }
 
+  public static String showAsGreen(String message) {
+    return ConsoleColors.GREEN + message + ConsoleColors.RESET;
+  }
   /**
    * This function clear the terminal screen
    */
