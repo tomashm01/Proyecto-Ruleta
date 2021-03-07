@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 enum BetTypes 
 { 
-  RED, BLACK, EVEN, ODD, HIGH, LOW, DOZEN1, DOZEN2, DOZEN3, LINE1, LINE2, LINE3;  
+  RED, BLACK, EVEN, ODD, HIGH, LOW, DOZEN1, DOZEN2, DOZEN3, LINE1, LINE2, LINE3, GREEN;  
 }; 
 
 /**

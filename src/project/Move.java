@@ -74,7 +74,7 @@ public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   public void addBet(BetTypes choice, int moneyBetted) {
     
     if (this.currentBets.containsKey(choice)){
-      moneyBetted+= currentBets.get(choice);
+      moneyBetted += currentBets.get(choice);
     }
     
     this.currentBets.put(choice, moneyBetted); // Add the new bet      

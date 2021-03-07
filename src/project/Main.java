@@ -27,7 +27,7 @@ public class Main {
     highLowBet = EnumSet.of(BetTypes.HIGH,BetTypes.LOW);
     dozenBet = EnumSet.range(BetTypes.DOZEN1, BetTypes.DOZEN3);
     lineBet = EnumSet.range(BetTypes.LINE1, BetTypes.LINE3);
- 
+    
     // User has 3 attemps to input a valid dni or a random dni will be set
 
     HUD.clearScreen();
@@ -49,7 +49,7 @@ public class Main {
         case 1:// Bet to red or black
           int moneyBetted = insertAmount(roundMovement);
 
-          BetTypes colorChoice = insertChoice(redBlackBet);
+          BetTypes colorChoice = insertChoice(redBlackBet); 
           roundMovement.addBet(colorChoice, moneyBetted);
           betCompleted = true;
           break;
@@ -104,7 +104,7 @@ public class Main {
           
         case 9:// Print the stadistics
           if (spunRoulette) {
-//            Roulette.calculateStatistics();
+            Roulette.calculateStatistics();
             HUD.printStatistics();
             printEnter(s);
           } else {
@@ -186,11 +186,12 @@ public class Main {
    * 
    */
 
-  public static BetTypes insertChoice(EnumSet<BetTypes> betType) {
+  public static BetTypes insertChoice(EnumSet<BetTypes> betType) { 
     Scanner s = new Scanner(System.in);
     String choice;
+    
     System.out.print("Input the type " + betType + ":");
-    choice = s.nextLine().toUpperCase();
+    choice = s.nextLine().toUpperCase(); //"red"
 
     do {
       if (!betTypeConstainsChoice(betType, choice)) {
@@ -198,16 +199,16 @@ public class Main {
         choice = s.nextLine().toUpperCase();
       }
     } while (!betTypeConstainsChoice(betType, choice));
-    return BetTypes.valueOf(choice);
+ 
+    return BetTypes.valueOf(choice); // 
   }
   
   /**
    * Check if String is in EnumSet 
    * E.g: EnumSet colors: RED,BLACK 
-   * Get RED.toString() and compare with choice
+   * Get RED.toString() and compare with choice 
    */
   private static boolean betTypeConstainsChoice(EnumSet<BetTypes> betType, String choice) {
-    //
     return betType.stream().anyMatch(enumType -> enumType.toString().equals(choice));
   }
 

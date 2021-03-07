@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 
 
 public class Roulette {
-  private static HashMap<String, String> statistics = new HashMap<String, String>();
+  private static HashMap<BetTypes, String> statistics = new HashMap<BetTypes, String>();
+  
   private static List<ArrayList<Bet>> allWonBets = new ArrayList<ArrayList<Bet>>();
   private static List<WinningNumber> allWinningNumbers = new ArrayList<WinningNumber>();
 
@@ -39,13 +40,12 @@ public class Roulette {
     totalProfit += calculateDozenLineBetsProfit(playerMove, myWinningNumber);
     return totalProfit; 
   }
-  
   private static Integer calculateDozenLineBetsProfit(Move playerMove,
       WinningNumber myWinningNumber) {
     int profit;
     EnumSet<BetTypes> dozenLineBet = EnumSet.range(BetTypes.DOZEN1,BetTypes.LINE3);
-    dozenLineBet.retainAll(myWinningNumber.getResults());
-    dozenLineBet.retainAll(playerMove.getCurrentBets().keySet());
+    dozenLineBet.retainAll(myWinningNumber.getResults()); 
+    dozenLineBet.retainAll(playerMove.getCurrentBets().keySet());//dozenLineBet -> BT.DOZEN1
     profit = dozenLineBet.stream().mapToInt(wonBet-> playerMove.getCurrentBets().get(wonBet)*3).sum();
     return profit;
   }
@@ -63,9 +63,19 @@ public class Roulette {
     // Create Atomic Integers to count inside a lambda
     AtomicInteger redCount = new AtomicInteger();
     AtomicInteger evenCount = new AtomicInteger();
+    AtomicInteger greenCount = new AtomicInteger();
     AtomicInteger highCount = new AtomicInteger();
+    AtomicInteger line1Count = new AtomicInteger();
+    AtomicInteger line2Count = new AtomicInteger();
+    AtomicInteger dozen1Count = new AtomicInteger();
+    AtomicInteger dozen2Count = new AtomicInteger();
+
+
     // iterate over allWiningNumbers to get properties from winningNumbers in order to increment each counter
     allWinningNumbers.stream().forEach(winningNumber -> {
+      if (winningNumber.getColor().equals(BetTypes.GREEN)) {
+        greenCount.getAndIncrement();
+      }
       if (winningNumber.getColor().equals(BetTypes.RED)) {
         redCount.getAndIncrement();
       }
@@ -75,12 +85,31 @@ public class Roulette {
       if (winningNumber.getHighLow().equals(BetTypes.HIGH)) {
         highCount.getAndIncrement();
       }
+      if (winningNumber.getLine().equals(BetTypes.LINE1)) {
+        line1Count.getAndIncrement();
+      }
+      if (winningNumber.getLine().equals(BetTypes.LINE2)) {
+        line2Count.getAndIncrement();
+      }
+      if (winningNumber.getDozen().equals(BetTypes.DOZEN1)) {
+        dozen1Count.getAndIncrement();
+      }
+      if (winningNumber.getDozen().equals(BetTypes.DOZEN2)) {
+        dozen2Count.getAndIncrement();
+      }
     });
+    
+    
+    
     // Transform atomic Integer to double probabilities and return list
     return new ArrayList<Double>(
         Arrays.asList(atomicToProbability(redCount), 1 - atomicToProbability(redCount),
             atomicToProbability(evenCount), 1 - atomicToProbability(evenCount),
-            atomicToProbability(highCount), 1 - atomicToProbability(highCount)));
+            atomicToProbability(highCount), 1 - atomicToProbability(highCount),
+            atomicToProbability(dozen1Count),atomicToProbability(dozen2Count),
+            1 - (atomicToProbability(dozen1Count) - atomicToProbability(dozen2Count)),
+            atomicToProbability(line1Count),atomicToProbability(line2Count),
+            1 - (atomicToProbability(line1Count) - atomicToProbability(line2Count))));
   }
 
   public static List<ArrayList<Bet>> getAllWonBets() {
@@ -91,32 +120,21 @@ public class Roulette {
 //    allWonBets.add((ArrayList<Bet>) apuestasGanadoras);
 //  }
 
-  public static HashMap<String, String> getStatistics() {
+  public static HashMap<BetTypes, String> getStatistics() {
     return statistics;
   }
-  
-
-
   
   /**
    * This function calculate the stadistics of all the spins
    */
   
-//  public static void calculateStatistics() {
-//    statistics.clear();
-//    List<String> betTypes = transformPossibleBetTypesToList(); // Key hashmap {"RED","BLACK"...}
-//    ArrayList<Double> odds = getProbabilities(); // Value (0.1, 0.n...) (Odds mean probabilities)
-//    fillStatistics(betTypes, odds); // fill hashmap with keys and values
-//  }
-  
-  /**
-   * This function can transform 2D array into 1D list in order to get everything easier
-   */
-  
-//  private static List<String> transformPossibleBetTypesToList() {
-//    return Arrays.asList(Bet.POSSIBLE_BET_TYPES).stream().flatMap(x -> Arrays.asList(x).stream())
-//        .collect(Collectors.toList());
-//  }
+ public static void calculateStatistics() {
+  statistics.clear();
+   
+   ArrayList<Double> odds = getProbabilities(); // Value (0.1, 0.n...) (Odds mean probabilities)
+   
+   fillStatistics(odds); // fill hashmap with keys and values
+ }
   
   private static double atomicToProbability(AtomicInteger count) {
     return count.doubleValue() / allWinningNumbers.size(); // Transform AtomicInteger to probability
@@ -130,15 +148,19 @@ public class Roulette {
    * @param AllWinningNumbersProbabilities
    */
   
-  private static void fillStatistics(List<String> betTypeList,
-      ArrayList<Double> AllWinningNumbersProbabilities) {
+  public static void fillStatistics(ArrayList<Double> AllWinningNumbersProbabilities) {
     int j = 0;
+    //Lo suyo seria tener una lista 
+    Object[] betTypesList = EnumSet.allOf(BetTypes.class).toArray();
+    
     while (j < AllWinningNumbersProbabilities.size()) {
-      statistics.put(betTypeList.get(j),
+      statistics.put( (BetTypes) betTypesList[j],
           String.format("%.2f%%", ((AllWinningNumbersProbabilities.get(j)) * 100)));
       j++;
     }
+    
   }
+  
 }
 
 

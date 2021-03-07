@@ -20,9 +20,11 @@ public class WinningNumber {
   public WinningNumber() {
     setRandomNumber();
     if (this.winningNumber == 0) {
-      this.redBlack = null;
-      this.evenOdd = null;
-      this.highLow = null;
+      this.redBlack = BetTypes.GREEN;
+      this.evenOdd = BetTypes.GREEN;
+      this.highLow = BetTypes.GREEN;
+      this.dozen = BetTypes.GREEN;
+      this.line = BetTypes.GREEN;
     } else {
       setColor();
       setEvenOdd();
@@ -45,10 +47,10 @@ public class WinningNumber {
   public BetTypes getEvenOdd() {
     return evenOdd;
   }
-  public BetTypes dozen() {
+  public BetTypes getDozen() {
     return dozen;
   }
-  public BetTypes line() {
+  public BetTypes getLine() {
     return line;
   }
   public BetTypes getHighLow() {
@@ -56,7 +58,7 @@ public class WinningNumber {
   }
   
   private void setRandomNumber() {
-    this.winningNumber = (int) (Math.random() * (36));
+    this.winningNumber = (int) (Math.random() * (2));
   }
 
   private void setColor() {
