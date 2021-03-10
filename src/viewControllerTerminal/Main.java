@@ -22,6 +22,7 @@ public class Main {
 
     Scanner s = new Scanner(System.in);
     int option = 0;
+    int number;
     boolean betCompleted = false;
     boolean spunRoulette = false;
     Move roundMovement = new Move();
@@ -86,8 +87,9 @@ public class Main {
           break;
        
         case 6:// Bet to Number (0-36)
+          number=insertNumber();
           moneyBetted = insertAmount(roundMovement);
-          roundMovement.addBet(new Bet(getValidNumber(),moneyBetted));  
+          roundMovement.addBet(new Bet(number,moneyBetted));  
           betCompleted = true;
           break;
        
@@ -283,5 +285,17 @@ public class Main {
     } while (invalid); // The loop ends when the input is valid
     return numToValidate;
   }
-
+  
+  public static int insertNumber() {
+    int number;
+    do {
+      System.out.println("Insert a number: ");
+      number=getValidNumber();
+      if(number<0 || number>36) {
+        System.out.println(ConsoleColors.RED+"Numero incorrecto"+ConsoleColors.RESET);
+      }
+      
+    }while(number<0 || number>36);
+    return number;
+  }
 }
