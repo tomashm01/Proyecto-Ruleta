@@ -1,10 +1,12 @@
-package project;
+package testing;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import project.Roulette;
+import viewControllerTerminal.Main;
 
 
 class MainTest {

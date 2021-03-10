@@ -1,4 +1,4 @@
-package project;
+package viewControllerTerminal;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Auxiliary class to print a Menu and choose an option.
@@ -34,7 +34,7 @@ public class Menu {
     Scanner s = new Scanner(System.in);
     int chosenOption;
     System.out.printf(customChooseMessage + "(1-%d):",this.options.size());
-    chosenOption = Main.validateNumber();
+    chosenOption = Main.getValidNumber();
     return chosenOption;
   }
 

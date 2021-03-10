@@ -1,7 +1,9 @@
-package project;
-import java.util.ArrayList;
-import java.util.Arrays;
+package viewControllerTerminal;
 import java.util.EnumSet;
+import bets.*;
+import player.Move;
+import player.Player;
+import project.Roulette;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Where user data is received, and finally, processed.
@@ -9,8 +11,11 @@ import java.util.EnumSet;
  * Using a Menu.
  */
 import java.util.Scanner;
+import Exceptions.NegativeException;
+import Exceptions.NoMoneyException;
 
 public class Main {
+  // User has DNI_ATTEMPTS to input a valid dni or a random dni will be set
   final static int DNI_ATTEMPTS = 3;
 
   public static void main(String[] args) {
@@ -28,8 +33,6 @@ public class Main {
     dozenBet = EnumSet.range(BetTypes.DOZEN1, BetTypes.DOZEN3);
     lineBet = EnumSet.range(BetTypes.LINE1, BetTypes.LINE3);
     
-    // User has 3 attemps to input a valid dni or a random dni will be set
-
     HUD.clearScreen();
     if (!dniExists()) {
       setRandomDni();
@@ -48,17 +51,15 @@ public class Main {
 
         case 1:// Bet to red or black
           int moneyBetted = insertAmount(roundMovement);
-
           BetTypes colorChoice = insertChoice(redBlackBet); 
-          roundMovement.addBet(colorChoice, moneyBetted);
+          roundMovement.addBet(new Bet(colorChoice,moneyBetted));
           betCompleted = true;
           break;
 
         case 2:// Bet to even or odd
           moneyBetted = insertAmount(roundMovement);
-   
           BetTypes evenOddChoice = insertChoice(evenOddBet);
-          roundMovement.addBet(evenOddChoice, moneyBetted);
+          roundMovement.addBet(new Bet(evenOddChoice,moneyBetted));
           betCompleted = true;
           break;
 
@@ -66,29 +67,31 @@ public class Main {
           moneyBetted = insertAmount(roundMovement);
           
           BetTypes highLowChoice = insertChoice(highLowBet);
-          roundMovement.addBet(highLowChoice, moneyBetted);
+          roundMovement.addBet(new Bet(highLowChoice,moneyBetted));
           betCompleted = true;
           break;
 
         case 4:// Bet to Dozen (1-12,13-24,24-36)
           moneyBetted = insertAmount(roundMovement);
           BetTypes DozenChoice = insertChoice(dozenBet);
-          roundMovement.addBet(DozenChoice, moneyBetted);
+          roundMovement.addBet(new Bet(DozenChoice,moneyBetted));
           betCompleted = true;
           break;
 
         case 5:// Bet to Line (1,3..34) (2,5...35) (3,6...36)
           moneyBetted = insertAmount(roundMovement);
           BetTypes lineChoice = insertChoice(lineBet);          
-          roundMovement.addBet(lineChoice, moneyBetted);
+          roundMovement.addBet(new Bet(lineChoice,moneyBetted));
           betCompleted = true;
           break;
        
-        case 6:// Bet to Number
-          
+        case 6:// Bet to Number (0-36)
+          moneyBetted = insertAmount(roundMovement);
+          roundMovement.addBet(new Bet(getValidNumber(),moneyBetted));  
+          betCompleted = true;
           break;
        
-        case 7:// Spin the roulette
+        case 7:
           Roulette.spunRoulette(roundMovement);
           HUD.printRouletteResults();
           roundMovement = new Move();
@@ -102,7 +105,7 @@ public class Main {
           betCompleted = false;
           break;
           
-        case 9:// Print the stadistics
+        case 9:
           if (spunRoulette) {
             Roulette.calculateStatistics();
             HUD.printStatistics();
@@ -113,7 +116,7 @@ public class Main {
           }
           break;
           
-        case 10:// Restart game
+        case 10:
           Player.restartGame();
           System.out.println(HUD.showAsRed("Money has been reset"));
           printEnter(s);
@@ -123,7 +126,7 @@ public class Main {
           System.out.println(ConsoleColors.CYAN + "Goodbye");
           break;
           
-        default:// Errors control
+        default:
           System.err.println(HUD.showAsRed("Error in the input option"));
           printEnter(s);
           
@@ -137,18 +140,14 @@ public class Main {
     s.nextLine();
   }
 
-  /**
-   * return true if custom dni is set successfully to player.
-   * 
-   * @return boolean
-   */
 
+  //If dni is set to the player...
   private static boolean dniExists() {
     Scanner s = new Scanner(System.in);
 
     int count = DNI_ATTEMPTS;
 
-    do {// User have n attemps to introduce a valid DNI
+    do {// User have n attemps to input a valid DNI
 
       System.out.printf(ConsoleColors.CYAN + "Please enter your DNI. (You have %d attempts):",
           count);
@@ -177,13 +176,7 @@ public class Main {
   }
 
   /**
-   * This function request a type of bet to the player, valide this type and returns it
-   * 
-   * @param String
-   * @param String
-   * 
-   * @return String
-   * 
+   * This function request a type of bet to the player, validate this type and returns it 
    */
 
   public static BetTypes insertChoice(EnumSet<BetTypes> betType) { 
@@ -194,11 +187,11 @@ public class Main {
     choice = s.nextLine().toUpperCase(); //"red"
 
     do {
-      if (!betTypeConstainsChoice(betType, choice)) {
+      if (!betTypeContainsChoice(betType, choice)) {
         System.out.printf(HUD.showAsRed("%s"), "\nPlease insert" + betType + ":");
         choice = s.nextLine().toUpperCase();
       }
-    } while (!betTypeConstainsChoice(betType, choice));
+    } while (!betTypeContainsChoice(betType, choice));
  
     return BetTypes.valueOf(choice); // 
   }
@@ -208,7 +201,7 @@ public class Main {
    * E.g: EnumSet colors: RED,BLACK 
    * Get RED.toString() and compare with choice 
    */
-  private static boolean betTypeConstainsChoice(EnumSet<BetTypes> betType, String choice) {
+  private static boolean betTypeContainsChoice(EnumSet<BetTypes> betType, String choice) {
     return betType.stream().anyMatch(enumType -> enumType.toString().equals(choice));
   }
 
@@ -237,8 +230,6 @@ public class Main {
    
   }
 
-  
-
   /**
    * This function request a amount of money for the bet
    * 
@@ -253,12 +244,12 @@ public class Main {
 
     do {
       System.out.print(ConsoleColors.YELLOW_BOLD + "Please insert the amount to bet: ");
-      moneyBetted = validateNumber(); // Checks if its a number
+      moneyBetted = getValidNumber(); // Checks if its a number
       try {
         roundMovement.betMoney(moneyBetted); // Checks if you have enough money or input is negative
         invalid = false;
-      } catch (NoMoneyException | NegativeException noMoney) {
-        System.err.println(HUD.showAsRed(noMoney.toString()));
+      } catch (NoMoneyException | NegativeException moneyException) {
+        System.err.println(HUD.showAsRed(moneyException.toString()));
       }
 
     } while (invalid);
@@ -272,7 +263,7 @@ public class Main {
    * 
    */
 
-  public static int validateNumber() {
+  public static int getValidNumber() {
     Scanner s = new Scanner(System.in);
     boolean invalid = true;
     int numToValidate = 0;
@@ -292,6 +283,5 @@ public class Main {
     } while (invalid); // The loop ends when the input is valid
     return numToValidate;
   }
-
 
 }

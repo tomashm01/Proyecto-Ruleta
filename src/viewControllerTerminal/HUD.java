@@ -1,15 +1,22 @@
-package project;
+package viewControllerTerminal;
 
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo Auxiliary class to print data at Main class.
  */
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import bets.Bet;
+import bets.BetTypes;
+import player.Move;
+import player.Player;
+import project.Roulette;
+import project.WinningNumber;
 import java.util.Collections;
 import java.util.List;
 
 public class HUD {
 
+  private static final int MAXIMUM_NUMBERS_PRINT = 10;
   private static final int RANDOMNUMBER_REFRESH_RATE = 200;
 
   // GETTERS
@@ -27,30 +34,25 @@ public class HUD {
   }
 
   private static ArrayList<Bet> lastSuccessfulBet() {
-    return Roulette.getAllWonBets().get(Roulette.getAllWonBets().size() - 1);
+    return Roulette.getAllSuccessfulBets().get(Roulette.getAllSuccessfulBets().size() - 1);
   }
 
-  /**
-   * This function print the info of the bet
-   * 
-   * @param Move
-   * 
+  /*
+   * Print current Bets
    */
-
   public static void printBetsInfo(Move roundMovement) {
     System.out.print(ConsoleColors.RESET);
     System.out.printf("%82s:%s\n ", "MONEY AT STAKE",
         ConsoleColors.YELLOW_BOLD + roundMovement.getMoneyAtStake() + ConsoleColors.RESET);
 
-    System.out.printf("%80s: ", "Current Bets");
-    System.out
-        .println(ConsoleColors.YELLOW_BOLD + roundMovement.getCurrentBets() + ConsoleColors.RESET);
+    System.out.printf("%80s:\n", "Current Bets");
+
+    roundMovement.getCurrentBets().forEach(
+        bet -> System.out.printf(ConsoleColors.YELLOW_BOLD + "%85s\n", bet + ConsoleColors.RESET));
+
   }
 
-  /**
-   * This function print the money and the dni of the player
-   */
-
+  //Print money and dni
   public static void printPlayerInfo() {
     System.out.printf(ConsoleColors.PURPLE_BOLD + "\n%81s:%d\n" + ConsoleColors.RESET,
         "MONEY" + ConsoleColors.YELLOW_BOLD, Player.getMoney());
@@ -59,22 +61,17 @@ public class HUD {
   }
 
   /**
-   * This function print the winning number, the results of the winning numbers (red or black, even
-   * or odd, high or low), print the bets of the player, print the winning bets and the balance in
-   * this roll
+   * This function print: winning number, results of the winning numbers (red or black, even or odd,
+   * high or low), bets of the player, winning bets and the balance on this roll
    */
 
   public static void printRouletteResults() {
     printWinningNumber();
     printWinningNumberResults();
-    //printBets();
-    //printSuccessfulBet();
-    printBalanceRoll();
+    printPreviousBets();
+    printSuccessfulBet();
+    printRollBalance();
   }
-
-  /*
-   * This function print the number on the roulette
-   */
 
   public static void printWinningNumber() {
 
@@ -86,8 +83,8 @@ public class HUD {
 
     List<WinningNumber> reverse = new ArrayList<WinningNumber>(Roulette.getAllWinningNumbers());
     Collections.reverse(reverse);
-    if (reverse.size() > 10) {
-      reverse.removeIf(ball -> reverse.indexOf(ball) > 10);
+    if (reverse.size() > MAXIMUM_NUMBERS_PRINT) {
+      reverse.removeIf(ball -> reverse.indexOf(ball) > MAXIMUM_NUMBERS_PRINT);
     }
     reverse.forEach(ball -> System.out.print(ball.getNumber() + " "));
   }
@@ -96,20 +93,9 @@ public class HUD {
     return ConsoleColors.CYAN_BOLD + message + ConsoleColors.RESET;
   }
 
-  /*
-   * This function prints the winning number
-   */
-
   private static void printTrulyWinningNumber() {
     printNumberWithColors(getLastWinningNumber());
   }
-
-  /**
-   * This function print the numbers using ConsoleColors
-   * 
-   * @param WinningNumber
-   * 
-   */
 
   private static void printNumberWithColors(WinningNumber someWinningNumber) {
 
@@ -133,15 +119,8 @@ public class HUD {
         oneDigitPrint(someWinningNumber);
       }
     }
-    
-  }
 
-  /**
-   * This function prints one number in red
-   * 
-   * @param WinningNumber
-   * 
-   */
+  }
 
   private static void oneDigitPrint(WinningNumber someWinningNumber) {
     if (someWinningNumber.getColor().equals(BetTypes.RED)) {
@@ -156,13 +135,6 @@ public class HUD {
     System.out.print("\b");
   }
 
-  /**
-   * This function converts the winning number in String
-   * 
-   * @param WinningNumber
-   * 
-   */
-
   private static boolean twoDigits(WinningNumber someWinningNumber) {
     return String.valueOf(someWinningNumber.getNumber()).length() == 2;
   }
@@ -172,7 +144,6 @@ public class HUD {
    */
 
   private static void printRandomNumbers() {
-
     for (int i = 0; i < 10; i++) {
       WinningNumber random = new WinningNumber();
       printNumberWithColors(random);
@@ -184,59 +155,42 @@ public class HUD {
       try {
         TimeUnit.MILLISECONDS.sleep(RANDOMNUMBER_REFRESH_RATE);
       } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        System.err.println("Wrong refresh rate");
       }
     }
   }
 
-  /**
-   * This function prints the results of the winning numbers
-   */
-
   public static void printWinningNumberResults() {
     System.out.printf("\n%41s", showAsCyan("Results:"));
-    if (getLastWinningNumber().getNumber() == 0) {
-      System.out.println("You lost everything");
-    } else {
+    if (getLastWinningNumber().getColor().equals(BetTypes.GREEN)) {
+      System.out.println("GREEN");
+    }else {
       System.out.println(ConsoleColors.WHITE_BACKGROUND_CUSTOM + getLastWinningNumber().getResults()
           + ConsoleColors.RESET);
     }
+  
   }
-
-  /**
-   * This function print the bets which the player win
-   */
 
   public static void printSuccessfulBet() {
     System.out.printf("%46s", showAsCyan("Winning bets:"));
-    if (lastSuccessfulBet().size() == 0) {
+    if (lastSuccessfulBet().isEmpty()) {
       System.out.println("You won no bet");
     } else {
       System.out.println(ConsoleColors.YELLOW_BOLD + lastSuccessfulBet() + ConsoleColors.RESET);
     }
   }
 
-  /**
-   * This function prints the bets of the player
-   */
-
-  public static void printBets() {
+  public static void printPreviousBets() {
     System.out.printf("%48s", showAsCyan("Your last bets:"));
-    if (getLastBets().size() == 0) {
-      System.out.println("You did not make any moves");
-
+    if (getLastBets().isEmpty()) {
+      System.out.println("You didn't bet");
     } else {
       System.out
           .println(ConsoleColors.PINK_BACKGROUND_CUSTOM + getLastBets() + ConsoleColors.RESET);
     }
   }
 
-  /**
-   * This function print the balace in the roll
-   */
-
-  public static void printBalanceRoll() {
+  public static void printRollBalance() {
     System.out.printf("%53s:", showAsCyan("Balance of this roll"));
     if (getLastBlance() > 0) {
       System.out.print(ConsoleColors.GREEN);
@@ -249,38 +203,11 @@ public class HUD {
     }
   }
 
-  /**
-   * This function print the type of bet
-   * 
-   * @param String
-   * @param String
-   * 
-   */
-
-  public static void printInputType(String possibleChoice1, String possibleChoice2) {
-    System.out.printf("%s", ConsoleColors.PURPLE_BOLD + "Input the type");
-    System.out
-        .print(ConsoleColors.CYAN_BOLD + " (" + possibleChoice1 + " | " + possibleChoice2 + "):");
-  }
-
-  /*
-   * This function print the stadistics of the roulette
-   */
-
   public static void printStatistics() {
     Roulette.getStatistics().forEach(
         (key, value) -> System.out.println(ConsoleColors.PURPLE_BOLD + key + ConsoleColors.RESET
             + " : " + ConsoleColors.BOLD_CUSTOM + value + ConsoleColors.RESET));
   }
-
-  /**
-   * This function show a message as red in console
-   * 
-   * @param error
-   * 
-   * @return error coloured
-   * 
-   */
 
   public static String showAsRed(String message) {
     return ConsoleColors.RESET + ConsoleColors.RED + message + ConsoleColors.RESET;
@@ -289,9 +216,6 @@ public class HUD {
   public static String showAsGreen(String message) {
     return ConsoleColors.GREEN + message + ConsoleColors.RESET;
   }
-  /**
-   * This function clear the terminal screen
-   */
 
   public static void clearScreen() {
     System.out.print("\033[H\033[2J");

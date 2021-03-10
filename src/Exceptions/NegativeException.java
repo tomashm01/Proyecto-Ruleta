@@ -1,4 +1,4 @@
-package project;
+package Exceptions;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * If a number is negative we will throw a NegativeException

@@ -1,4 +1,4 @@
-package project;
+package viewControllerTerminal;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Colors we are able to use.

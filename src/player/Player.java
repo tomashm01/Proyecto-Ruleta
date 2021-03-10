@@ -1,4 +1,5 @@
-package project;
+package player;
+
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Data from user. Dni, money.
@@ -46,7 +47,7 @@ public class Player {
    * 
    */
   
-  static boolean isValidDni(String dni) {
+  public static boolean isValidDni(String dni) {
     String pattern = "^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$(?i)";
     //^[0-9]{8} -> first 8 characters must be numbers
     //$ -> last character

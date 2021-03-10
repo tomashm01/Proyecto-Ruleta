@@ -5,6 +5,7 @@ package project;
  */
 import java.util.List;
 import java.util.stream.IntStream;
+import bets.BetTypes;
 
 public class WinningNumber {
   //A winning number has his own properties itself (He is even or odd, high or low, red or black)
@@ -41,7 +42,7 @@ public class WinningNumber {
   public BetTypes getColor() {
     return redBlack;
   }
-  public int getNumber() {
+  public Integer getNumber() {
     return winningNumber;
   }
   public BetTypes getEvenOdd() {
