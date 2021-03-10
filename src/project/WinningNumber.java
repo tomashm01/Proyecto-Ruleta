@@ -59,7 +59,7 @@ public class WinningNumber {
   }
   
   private void setRandomNumber() {
-    this.winningNumber = (int) (Math.random() * (2));
+    this.winningNumber = (int) (Math.random() * (37));
   }
 
   private void setColor() {
@@ -94,7 +94,11 @@ public class WinningNumber {
   }
   
   private void setDozen() {
-    this.dozen =  BetTypes.valueOf("DOZEN" + ( (int) this.winningNumber/12 + 1));    
+    if (this.winningNumber % 12 == 0 && this.winningNumber != 0) {
+      this.dozen =  BetTypes.valueOf("DOZEN" + ( (int) this.winningNumber/12));    
+    }else {
+      this.dozen =  BetTypes.valueOf("DOZEN" + ( (int) this.winningNumber/12 + 1));    
+    }
   }
   
   private void setLine() {

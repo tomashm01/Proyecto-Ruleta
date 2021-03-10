@@ -48,7 +48,7 @@ public class HUD {
     System.out.printf("%80s:\n", "Current Bets");
 
     roundMovement.getCurrentBets().forEach(
-        bet -> System.out.printf(ConsoleColors.YELLOW_BOLD + "%85s\n", bet + ConsoleColors.RESET));
+        bet -> System.out.printf(ConsoleColors.YELLOW_BOLD + "%92s\n", bet + ConsoleColors.RESET));
 
   }
 
@@ -206,7 +206,7 @@ public class HUD {
   public static void printStatistics() {
     Roulette.getStatistics().forEach(
         (key, value) -> System.out.println(ConsoleColors.PURPLE_BOLD + key + ConsoleColors.RESET
-            + " : " + ConsoleColors.BOLD_CUSTOM + value + ConsoleColors.RESET));
+            + " : " + ConsoleColors.BOLD_CUSTOM + String.format("%.2f%%", value*100) + ConsoleColors.RESET));
   }
 
   public static String showAsRed(String message) {
