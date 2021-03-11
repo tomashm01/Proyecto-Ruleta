@@ -87,8 +87,8 @@ public class Main {
           break;
        
         case 6:// Bet to Number (0-36)
-          number=insertNumber();
           moneyBetted = insertAmount(roundMovement);
+          number=insertNumber();
           roundMovement.addBet(new Bet(number,moneyBetted));  
           betCompleted = true;
           break;
@@ -289,10 +289,10 @@ public class Main {
   public static int insertNumber() {
     int number;
     do {
-      System.out.println("Insert a number: ");
+      System.out.println("Insert a number(0-36): ");
       number=getValidNumber();
       if(number<0 || number>36) {
-        System.out.println(ConsoleColors.RED+"Numero incorrecto"+ConsoleColors.RESET);
+        HUD.showAsRed("Numero incorrecto");
       }
       
     }while(number<0 || number>36);
