@@ -10,10 +10,8 @@ public class Bet {
 
   BetTypes betType;
   int amount;
-  int odd; // 1:x
+  int odd; // Bet multiplier
   Integer number = null;
-
-  // public boolean isWin(WinningNumber myWinningNumber);
 
   public void setAmount(int amount) {
     this.amount = amount;

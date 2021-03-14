@@ -66,7 +66,6 @@ public class Main {
 
         case 3:// Bet to low(1-18) or high(19-36)
           moneyBetted = insertAmount(roundMovement);
-          
           BetTypes highLowChoice = insertChoice(highLowBet);
           roundMovement.addBet(new Bet(highLowChoice,moneyBetted));
           betCompleted = true;
@@ -288,13 +287,11 @@ public class Main {
   
   public static int insertNumber() {
     int number;
-    do {
-      System.out.println("Insert a number(0-36): ");
-      number=getValidNumber();
-      if(number<0 || number>36) {
-        HUD.showAsRed("Numero incorrecto");
-      }      
-    }while(number<0 || number>36);
+    System.out.print("Insert a number(0-36): ");
+    while ((number = getValidNumber()) < 0 || number > 36) {
+      System.out.println(HUD.showAsRed("Numero incorrecto"));
+      System.out.print("Insert a number(0-36): ");
+    }
     return number;
   }
 }
