@@ -1,9 +1,11 @@
 package viewControllerTerminal;
 import java.util.EnumSet;
 import bets.*;
+import exceptions.NegativeException;
+import exceptions.NoMoneyException;
 import player.Move;
 import player.Player;
-import project.Roulette;
+import roulette.Roulette;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Where user data is received, and finally, processed.
@@ -11,8 +13,6 @@ import project.Roulette;
  * Using a Menu.
  */
 import java.util.Scanner;
-import Exceptions.NegativeException;
-import Exceptions.NoMoneyException;
 
 public class Main {
   // User has DNI_ATTEMPTS to input a valid dni or a random dni will be set
@@ -293,8 +293,7 @@ public class Main {
       number=getValidNumber();
       if(number<0 || number>36) {
         HUD.showAsRed("Numero incorrecto");
-      }
-      
+      }      
     }while(number<0 || number>36);
     return number;
   }

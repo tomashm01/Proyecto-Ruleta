@@ -1,7 +1,7 @@
 package bets;
 
 import java.util.EnumSet;
-import project.WinningNumber;
+import roulette.WinningNumber;
 
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo Auxiliary class to manage every bet for each Move

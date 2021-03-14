@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import project.Roulette;
+import roulette.Roulette;
 import viewControllerTerminal.Main;
 
 

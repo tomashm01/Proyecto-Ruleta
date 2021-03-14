@@ -9,8 +9,8 @@ import bets.Bet;
 import bets.BetTypes;
 import player.Move;
 import player.Player;
-import project.Roulette;
-import project.WinningNumber;
+import roulette.Roulette;
+import roulette.WinningNumber;
 import java.util.Collections;
 import java.util.List;
 

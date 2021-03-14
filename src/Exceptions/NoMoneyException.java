@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * If you have no money to bet, we will throw a NoMoneyException

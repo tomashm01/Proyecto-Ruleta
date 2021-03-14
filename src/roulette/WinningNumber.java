@@ -1,4 +1,4 @@
-package project;
+package roulette;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo
  * Random number between 0 - 36, this number has his own properties like color, Even or Odd, High or Low

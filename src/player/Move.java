@@ -1,16 +1,16 @@
 package player;
 
+import static roulette.Roulette.calculateProfit;
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo Set of Bets before Roulette is spun. We also stash all bets
  * and balances made previously.
  */
 import java.util.ArrayList;
 import java.util.List;
-import Exceptions.NegativeException;
-import Exceptions.NoMoneyException;
 import bets.Bet;
-import static project.Roulette.calculateProfit;
-import project.WinningNumber;
+import exceptions.NegativeException;
+import exceptions.NoMoneyException;
+import roulette.WinningNumber;
 
 public class Move { // A move is a set of bets Ex. [RED(50),EVEN(40),HIGH(20)]
   // This move is compared with the winning Number.

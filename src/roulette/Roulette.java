@@ -1,4 +1,4 @@
-package project;
+package roulette;
 
 /**
  * Authors: Jesús Díaz, Tomás Hidalgo Where we calculate benefits from Roulette to set money at user
