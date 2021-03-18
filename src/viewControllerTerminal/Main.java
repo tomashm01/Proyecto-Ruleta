@@ -289,7 +289,7 @@ public class Main {
     int number;
     System.out.print("Insert a number(0-36): ");
     while ((number = getValidNumber()) < 0 || number > 36) {
-      System.out.println(HUD.showAsRed("Numero incorrecto"));
+      System.out.println(HUD.showAsRed("Invalid Number"));
       System.out.print("Insert a number(0-36): ");
     }
     return number;
