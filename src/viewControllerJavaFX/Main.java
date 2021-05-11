@@ -12,7 +12,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-	  var fxml = new FXMLLoader(getClass().getResource("vistas/main.fxml"));
+	  var fxml = new FXMLLoader(getClass().getResource("vistas/ValidDni.fxml"));
 	    try {
 	      var root = fxml.<Pane>load();
 	      var scene = new Scene(root);

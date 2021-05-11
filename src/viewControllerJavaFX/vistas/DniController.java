@@ -10,7 +10,7 @@ import javafx.event.ActionEvent;
 
 import javafx.scene.control.Label;
 
-public class mainController {
+public class DniController {
 	@FXML
 	private Button testButton;
 	@FXML
@@ -18,7 +18,6 @@ public class mainController {
 	@FXML
 	private TextField textFieldTest;
 
-	// Event Listener on Button[#testButton].onAction
 	@FXML
 	public void test(ActionEvent event) {
 		System.out.println("Hola");
