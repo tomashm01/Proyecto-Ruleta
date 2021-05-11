@@ -45,7 +45,7 @@ public class Test extends Application {
     Label label2 = new Label("Contenido del fichero sin comentarios");
     HBox caja= editarHBox(label1);
 
-    VBox vertical = editarVBox(caja,label2);
+r    VBox vertical = editarVBox(caja,label2);
 
     Scene escena = new Scene(vertical, 400, 300);
 
